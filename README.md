@@ -6,4 +6,5 @@
 </div>
 <div id="header" align="center">
   <img src="logos/WISE2MBH positivo sin fondo.png" width="500"/>
+  <img src="logos/W2M sin fondo.png" width="500"/>
 </div>
