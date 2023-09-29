@@ -9,8 +9,19 @@
 </div>
 
 ---
+### Instalation 
 
-### About this project :
+To install `wise2mbh-0.0.1` you will need to have `git` installed. If you don't have it, you can install with the following command:
+
+    sudo apt install git
+
+To install `wise2mbh-0.0.1`, use the following command:
+
+    pip install git+https://github.com/joacoh/wise2mbh.git
+
+---
+
+### About this project
 
 - WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH)
 
