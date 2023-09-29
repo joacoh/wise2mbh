@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 import codecs
 import os
 
@@ -17,14 +17,16 @@ setup(
     author="joacoh (Joaquín Hernández-Yévenes)",
     author_email="<jheryev@gmail.com>",
     description=DESCRIPTION,
-    packages=find_packages(),
+    packages=['wise2mbh'],
     install_requires=['numpy','astropy','scipy'],
     keywords=['python'],
+    license="MIT",
     classifiers=[
         "Development Status :: 1 - Planning",
         "Programming Language :: Python :: 3",
         "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",
-    ]
+    ],
+    python_requires='>=3.8',
 )
