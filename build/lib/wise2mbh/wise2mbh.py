@@ -6,6 +6,20 @@ from numpy.random import default_rng
 rng = default_rng()
 
 """
+Parameter Monte Carlo for error propagation / application of scatter
+Inputs:
+nominal: Central value of parameter, if scatter, set to 0, default=0
+std: Standar deviation of the parameter, if scatter, the scatter itself, default=1
+n: size of the random distribution, default=1000
+
+Output:
+param: Normal random distribution of size N with mean nominal and standard deviation std
+""" 
+def param_montecarlo(nominal=0, std=1, n=1000):
+    param = nominal + std*rng.standard_normal(number)
+    return param
+
+"""
 Clipping Dist used to clip W1-W2 color distributions to set values.
 Inputs:
 array: the W1-W2 color distribution
