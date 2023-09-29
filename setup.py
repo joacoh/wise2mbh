@@ -14,7 +14,7 @@ DESCRIPTION = 'Galaxy properties and MBH estimates from WISE'
 setup(
     name="wise2mbh",
     version=VERSION,
-    author="joacoh (Joaquín Hernández-Yévenes)",
+    author="joacoh (Joaquin Hernandez Yevenes)",
     author_email="<jheryev@gmail.com>",
     description=DESCRIPTION,
     packages=['wise2mbh'],
