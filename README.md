@@ -22,6 +22,13 @@ To install `wise2mbh-0.0.2`, use the following command:
 Pre-requisites are a Python version `>=3.8` and have `numpy-1.23.5`, `scipy-1.9.3`, `astropy-5.1.1` and `pandas-1.5.2`
 
 ---
+### Scripts and Tutorials
+
+A general script and tutorials for the generation of input samples and use of the functions will be provided in the near future!
+
+Actual stage: **Work in progress**
+
+---
 
 ### About this project
 
