@@ -32,7 +32,7 @@ Output:
 param: Normal random distribution of size N with mean nominal and standard deviation std
 """ 
 def param_montecarlo(nominal=0, std=1, n=1000):
-    param = nominal + std*rng.standard_normal(number)
+    param = nominal + std*rng.standard_normal(n)
     return param
 
 """
