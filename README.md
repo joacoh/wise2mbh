@@ -19,7 +19,7 @@ To install `wise2mbh-0.0.1`, use the following command:
 
     pip install git+https://github.com/joacoh/wise2mbh.git
 
-Pre-requisites are a Python version `>=3.8` and have `numpy-1.23.5`, `scipy-1.9.3` and `astropy-5.1.1`
+Pre-requisites are a Python version `>=3.8` and have `numpy-1.23.5`, `scipy-1.9.3`, `astropy-5.1.1` and `pandas-1.5.2`
 
 ---
 

@@ -3,7 +3,23 @@ import numpy as np
 from scipy.special import logit
 from astropy.cosmology import Planck18 as cosmo
 from numpy.random import default_rng
+import pandas as pd
 rng = default_rng()
+""" 
+K-correction look-up table from Jarrett+2023 for a set of WISE colors (W1,W1W2,W1W3,W3W4,W2W3)
+Input:
+morphtype: Morph type of the table to use, only 'E', 'L' and 'S' are supported, if other value is entered, 'E' outputed.
+
+Output:
+table: Pandas table of the lookup table for kcorrections, default is 'E' table.
+""" 
+def kcorr_table(morphtype='E'):
+    table = pd.read_table('kcorrections/E.kcorrection_fw1_w1w2_w1w3.tbl', delim_whitespace=True)
+    if morphtype=='S':
+        table = pd.read_table('kcorrections/Sb.kcorrection_fw1_w1w2_w1w3.tbl', delim_whitespace=True)
+    elif morphtype=='L':
+        table = pd.read_table('kcorrections/S0.kcorrection_fw1_w1w2_w1w3.tbl', delim_whitespace=True)
+    return table
 
 """
 Parameter Monte Carlo for error propagation / application of scatter
