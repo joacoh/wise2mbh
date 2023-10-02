@@ -242,4 +242,16 @@ def w1_k_corrected(lookup_table,w1,z):
     w1_vega_mag_k_corrected = w1_ab_mag-2.699
 
     return w1_vega_mag_k_corrected
+
+"""
+W1-W2 limit in boxy region
+Inputs:
+w2w3: Observed W2-W3 color for a set of sources to test
+
+Output:
+w1w2_tresh: Boxy limit in W1-W2 color
+""" 
+def w1w2_treshold_qso(w2w3):
+    w1w2_tresh = (0.05*w2w3)+0.38
+    return w1w2_tresh
 # %%
