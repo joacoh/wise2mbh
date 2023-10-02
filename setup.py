@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 import codecs
 import os
 
@@ -17,7 +17,9 @@ setup(
     author="joacoh (Joaquin Hernandez Yevenes)",
     author_email="<jheryev@gmail.com>",
     description=DESCRIPTION,
-    packages=['wise2mbh'],
+    packages=find_packages(),
+    package_data={
+        'wise2mbh.kcorrections': ['*.tbl']},
     install_requires=['numpy','astropy','scipy','pandas'],
     keywords=['python'],
     license="MIT",
