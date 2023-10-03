@@ -57,7 +57,7 @@ def clipping_dist(array, tresh, val=0.01, greater_than=True):
         else:
             while m < tresh:
                 new_array[i,:] += val
-                m = np
+                m = np.mean(new_array[i,:])
     return new_array
 
 """
