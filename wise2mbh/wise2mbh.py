@@ -5,15 +5,17 @@ from astropy.cosmology import Planck18 as cosmo
 from numpy.random import default_rng
 from wise2mbh.kcorrections import ekcorr, skcorr, lkcorr
 rng = default_rng()
-""" 
-K-correction look-up table from Jarrett+2023 for a set of WISE colors (W1,W1W2,W1W3,W3W4,W2W3)
-Input:
-morphtype: Morph type of the table to use, only 'E', 'L' and 'S' are supported, if other value is entered, 'E' outputed.
 
-Output:
-table: Pandas table of the lookup table for kcorrections, default is 'E' table.
-""" 
 def kcorr_table(morphtype='E'):
+    """ 
+    K-correction look-up table from Jarrett+2023 for a set of WISE colors (W1,W1W2,W1W3,W3W4,W2W3).
+
+    Input:
+    morphtype (str, optional): Morph type of the table to use, only 'E', 'L' and 'S' are supported.
+
+    Output:
+    table (pandas.DataFrame): Lookup table for kcorrections, default is 'E' table.
+    """ 
     table = ekcorr
     if morphtype=='S':
         table = skcorr
@@ -21,32 +23,34 @@ def kcorr_table(morphtype='E'):
         table = lkcorr
     return table
 
-"""
-Parameter Monte Carlo for error propagation / application of scatter
-Inputs:
-nominal: Central value of parameter, if scatter, set to 0, default=0
-std: Standar deviation of the parameter, if scatter, the scatter itself, default=1
-n: size of the random distribution, default=1000
-
-Output:
-param: Normal random distribution of size N with mean nominal and standard deviation std
-""" 
 def param_montecarlo(nominal=0, std=1, n=1000):
+    """
+    Parameter Monte Carlo for error propagation / application of scatter.
+
+    Inputs:
+    nominal (float, optional): Central value of parameter, if scatter, set to 0
+    std (float, optinal): Standar deviation of the parameter, if scatter, the scatter itself
+    n (int, optinal): size of the random distribution
+
+    Output:
+    param (numpy.ndarray): Normal random distribution of size N with mean nominal and standard deviation std
+    """ 
     param = nominal + std*rng.standard_normal(n)
     return param
 
-"""
-Clipping Dist used to clip W1-W2 color distributions to set values.
-Inputs:
-array: the W1-W2 color distribution
-tresh: limit value to clip
-val: default step used to shift, default=0.01
-greater_than: If the shift is set to a minimum (True) or a maximum (False), default=True
-
-Output:
-new_arrray: W1-W2 color distribution clipped to the tresh value set
-""" 
 def clipping_dist(array, tresh, val=0.01, greater_than=True):
+    """
+    Clipping Dist used to clip W1-W2 color distributions to set values.
+
+    Inputs:
+    array (numpy.ndarray): the W1-W2 color distribution
+    tresh (float): limit value to clip
+    val (float, optional): default step used to shift
+    greater_than (boolean, optional): If the shift is set to a minimum (True) or a maximum (False)
+
+    Output:
+    new_arrray (numpy.ndarray): W1-W2 color distribution clipped to the tresh value set
+    """ 
     mean = np.mean(array, axis=1)
     new_array = np.copy(array)
     for i, m in zip(np.arange(np.shape(array)[0]), mean):
@@ -60,17 +64,18 @@ def clipping_dist(array, tresh, val=0.01, greater_than=True):
                 m = np.mean(new_array[i,:])
     return new_array
 
-"""
-Array of Monte Carlo distributions for an array M of quantities
-Inputs:
-nominal: array-like object of mean values of the quantity
-std: error or standard deviation of the values of the quantity
-n: size of the Monte Carlo distribution, default=1000
-
-Output:
-array_mc: MxN array of random distributions of the quantities. Each row is a normal distribution of mean equal to nominal and standard deviation equal to std
-""" 
 def array_montecarlo(nominal, std, n=1000):
+    """
+    Array of Monte Carlo distributions for an array M of quantities
+
+    Inputs:
+    nominal (numpy.ndarray): array-like object of mean values of the quantity
+    std (numpy.ndarray): error or standard deviation of the values of the quantity
+    n (int, optional): size of the Monte Carlo distribution
+
+    Output:
+    array_mc (numpy.ndarray): MxN array of random distributions of the quantities. Each row is a normal distribution of mean equal to nominal and standard deviation equal to std
+    """ 
     to_append = []
     for i,j in zip(nominal,std):
         true_hist = i + j*rng.standard_normal(n)
@@ -79,58 +84,63 @@ def array_montecarlo(nominal, std, n=1000):
     array_mc = np.array(to_append)
     return array_mc
 
-"""
-Distance modulus (mu) for a given redshift
-Input:
-z: array-like object of redshifts
-
-Output: 
-mu: array-like object with the distance modulus
-"""
 def distance_modulus_z(z):
+    """
+    Distance modulus (mu) for a given redshift
+
+    Input:
+    z (numpy.ndarray): array-like object of redshifts
+
+    Output: 
+    mu (numpy.ndarray): array-like object with the distance modulus
+    """
     if z.size==0:
         return np.array([])  # Return an empty array if z is empty
     lum_dist = cosmo.luminosity_distance(z).value
     mu = 5 * np.log10(lum_dist * 1e6) - 5
     return mu
 
-"""
-Luminosity distance for a given redshift
-Input:
-z: array-like object of redshifts
-
-Output:
-lum_dist: array-like object with luminosity distances
-"""
 def lumdist_z(z):
+    """
+    Luminosity distance for a given redshift
+
+    Input:
+    z (numpy.ndarray): array-like object of redshifts
+
+    Output:
+    lum_dist (numpy.ndarray): array-like object with luminosity distances
+    """
     if z.size==0:
         return np.array([])  # Return an empty array if z is empty
     lum_dist = cosmo.luminosity_distance(z).value
     return lum_dist
 
-"""
-Distance modulus (mu) for a given distance
-Input:
-dist: array-like object of distances in Mpc
-
-Output:
-mu: array-like object with the distance modulus
-"""
 def distance_modulus_dist(dist):
+    """
+    Distance modulus (mu) for a given distance
+
+    Input:
+    dist (numpy.ndarray): array-like object of distances in Mpc
+
+    Output:
+    mu (numpy.ndarray): array-like object with the distance modulus
+    """
     if dist.size==0:
         return np.array([])  # Return an empty array if z is empty
     mu = 5*np.log10(dist*1e6)-5
     return mu
 
-"""
-WISE Color 2 T-value morphological type.
-Inputs:
-color: W2-W3 color from WISE bands 
-
-Output:
-t_value: Hubble type (T-value) of morphological class of the galaxy
-""" 
 def w2w3_to_morph(color, mc=False):
+    """
+    WISE Color 2 T-value morphological type
+
+    Inputs:
+    color (numpy.ndarray): W2-W3 color from WISE bands 
+    mc (boolean, optinal): If the calculations consider Monte Carlo approach
+
+    Output:
+    t_value: Hubble type (T-value) of morphological class of the galaxy
+    """ 
     if type(color) is list:
         color = np.array(color)
 
@@ -146,17 +156,18 @@ def w2w3_to_morph(color, mc=False):
 
     return t_value
 
-"""
-WISE to Stellar Mass (M_*) of an extragalactic object
-Inputs:
-w1abs: array-like object of W1 absolute magnitudes
-w1w2: array-like object of W1-W2 colors
-resolved: If the WISE mag and colors come from resolved source (like WXSC), it different slopes/intercept, default=False
-
-Output:
-log_sm: array-like object with log of the Stellar Mass
-""" 
 def wise_to_logsm(w1abs, w1w2, resolved=False):
+    """
+    WISE to Stellar Mass (M_*) of an extragalactic object
+
+    Inputs:
+    w1abs (numpy.ndarray): array-like object of W1 absolute magnitudes
+    w1w2 (numpy.ndarray): array-like object of W1-W2 colors
+    resolved (boolean, optional): If the WISE mag and colors come from resolved source (like WXSC), it uses different slopes/intercept
+
+    Output:
+    log_sm (numpy.ndarray): array-like object with log of the Stellar Mass
+    """ 
     w1_abs_sun = 3.26                   #from Willmer (2018) https://iopscience.iop.org/article/10.3847/1538-4365/aabfdf
 
     log_sm_lw1 = -1.96*w1w2 - 0.03
@@ -167,31 +178,33 @@ def wise_to_logsm(w1abs, w1w2, resolved=False):
     
     return log_sm
 
-"""
-Morphological classification (T_Type) to Bulge-to-Total (B/T)
-Input:
-t_value: array-like object of morpholofical classification in the Hubble sequence of the extragalactic object
-
-Output:
-b_ratio: array-like object of Bulge-to-Total ratios
-""" 
 def morph_to_bulge_ratio(t_value):
+    """
+    Morphological classification (T_Type) to Bulge-to-Total (B/T)
+
+    Input:
+    t_value (numpy.ndarray): array-like object of morpholofical classification in the Hubble sequence of the extragalactic object
+
+    Output:
+    b_ratio (numpy.ndarray): array-like object of Bulge-to-Total ratios
+    """ 
     values = [0.35777546, 7.72843881, 0.09658478, 0.05159308]
     b_ratio =  values[3] + values[0]*(values[1]**(-values[2]*t_value))
     b_ratio[b_ratio>1] = 1
 
     return b_ratio
 
-"""
-Bulge Mass to Black Hole Mass from Schutte+2019
-Input:
-bulgemass: array-like object of bulge masses
-mc: Boolean to use monte carlo parameters, default=False
-
-Output:
-mbh: array-like object of Black hole masses
-""" 
 def bulge_to_mbh(bulgemass, mc=False):
+    """
+    Bulge Mass to Black Hole Mass from Schutte+2019
+
+    Input:
+    bulgemass (numpy.ndarray): array-like object of bulge masses
+    mc (boolean, optional): Boolean to use monte carlo parameters, default=False
+
+    Output:
+    mbh (numpy.ndarray): array-like object of Black hole masses
+    """ 
     mbh = 1.24*(bulgemass - 11) +8.8
 
     if mc:
@@ -202,32 +215,34 @@ def bulge_to_mbh(bulgemass, mc=False):
         mbh = param1*(bulgemass - 11) + param2 + sct
     return mbh
 
-"""
-Compensated Black Hole Mass (MBH) via aplication of the compensation factor (C_f)
-Input:
-mbh: array-like object of MBH values
-
-Output:
-new_mbh: array-like object of compensated MBH values
-""" 
 def comp_mbh(mbh):
+    """
+    Compensated Black Hole Mass (MBH) via aplication of the compensation factor (C_f)
+
+    Input:
+    mbh (numpy.ndarray): array-like object of MBH values
+
+    Output:
+    new_mbh (numpy.ndarray): array-like object of compensated MBH values
+    """ 
     params = [-0.18062595,  1.72608017]
     comp_par = params[0]*mbh + params[1]   #derived in notebook for the defined control sample
     new_mbh = mbh + comp_par
 
     return new_mbh
 
-"""
-K-correction of WISE colors
-Inputs:
-lookup_table: K-correction table to use 
-redshift: array-like object of redshifts to calculate K-correction
-correction_factor: Color for which to calculate its correction factor, default:W2-W3
-
-Output:
-to_return: K-correction factors for selected color
-""" 
 def get_correction_factor(lookup_table, redshift, correction_factor='W2-W3'):
+    """
+    K-correction of WISE colors
+
+    Inputs:
+    lookup_table (pandas.DataFrame): K-correction table to use 
+    redshift (float, int or numpy.ndarray): array-like object of redshifts to calculate K-correction
+    correction_factor (str, optional): Color for which to calculate its correction factor, default:W2-W3
+
+    Output:
+    to_return (float or numpy.ndarray): K-correction factors for selected color
+    """ 
     if isinstance(redshift, (float,int,np.float64)):
         if redshift < lookup_table['z'].min() or redshift > lookup_table['z'].max():
             nearest_values = lookup_table.iloc[np.abs(lookup_table['z'] - redshift).argsort()[:2]]
@@ -245,17 +260,18 @@ def get_correction_factor(lookup_table, redshift, correction_factor='W2-W3'):
             to_return.append(a)
         return to_return
 
-"""
-K-correction of WISE W1 magnitude
-Inputs:
-lookup_table: K-correction table to use 
-w1: array-like object of W1 magnitudes to calculate K-correction
-redshift: array-like object of redshifts to calculate K-correction
-
-Output:
-w1_vega_mag_k_corrected: array-like object of K-corrected W1 magnitudes
-""" 
 def w1_k_corrected(lookup_table,w1,z):
+    """
+    K-correction of WISE W1 magnitude
+
+    Inputs:
+    lookup_table (pandas.DataFrame): K-correction table to use 
+    w1 (numpy.ndarray): array-like object of W1 magnitudes to calculate K-correction
+    redshift (numpy.ndarray): array-like object of redshifts to calculate K-correction
+
+    Output:
+    w1_vega_mag_k_corrected (numpy.ndarray): array-like object of K-corrected W1 magnitudes
+    """ 
     w1_flux = 309.540 * (10**(-w1/2.5))
     k_fac_w1 = np.array(get_correction_factor(lookup_table=lookup_table, redshift=z, correction_factor='f1'))
 
@@ -266,15 +282,16 @@ def w1_k_corrected(lookup_table,w1,z):
 
     return w1_vega_mag_k_corrected
 
-"""
-W1-W2 limit in boxy region
-Inputs:
-w2w3: Observed W2-W3 color for a set of sources to test
-
-Output:
-w1w2_tresh: Boxy limit in W1-W2 color
-""" 
 def w1w2_treshold_qso(w2w3):
+    """
+    W1-W2 limit in boxy region
+
+    Inputs:
+    w2w3 (numpy.ndarray): Observed W2-W3 color for a set of sources to test
+
+    Output:
+    w1w2_tresh (numpy.ndarray): Boxy limit in W1-W2 color
+    """ 
     w1w2_tresh = (0.05*w2w3)+0.38
     return w1w2_tresh
 # %%
