@@ -4,6 +4,7 @@ from astropy.table import Table
 from astroquery.ipac.ned import Ned
 import astropy.units as u
 from astroquery.xmatch import XMatch
+import numpy as np
 
 def query_ned(table, ra_column='RA', dec_column='DEC', radius=3, equinox='J2000.0', coords=True, name_column='ONAME', verbose=False):
     """
