@@ -11,7 +11,7 @@
 ---
 ### Instalation 
 
-To install `wise2mbh-0.0.4` you will need to have `git` installed. If you don't have it, you can install it with the following command:
+To install `wise2mbh-0.0.4` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
 
     sudo apt install git
 
