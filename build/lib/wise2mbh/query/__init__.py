@@ -35,7 +35,7 @@ def query_ned(table, ra_column='RA', dec_column='DEC', radius=3, equinox='J2000.
     table['NED_TYPE'] = 'Unknown'
 
     if coords:
-        coordinates = SkyCoord(table[ra_column]*u.deg, table[dec_column]*u.deg, equinox=equinox)
+        coordinates = SkyCoord(table[ra_column].value*u.deg, table[dec_column].value*u.deg, equinox=equinox)
 
         for i, coord in enumerate(coordinates):
             ned_results = Ned.query_region(coord, radius=radius*u.arcsec)
