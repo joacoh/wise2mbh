@@ -28,7 +28,7 @@ A general script and tutorials for the generation of input samples and use of th
 
 Actual stage of scripts: **Work in progress**
 
-Actual stage of scripts: **Ready**
+Actual stage of tutorials: **Ready**
 
 ---
 
