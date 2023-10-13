@@ -26,7 +26,9 @@ Pre-requisites are a Python version `>=3.8` and have `numpy-1.23.5`, `scipy-1.9.
 
 A general script and tutorials for the generation of input samples and use of the functions will be provided in the near future!
 
-Actual stage: **Work in progress**
+Actual stage of scripts: **Work in progress**
+
+Actual stage of scripts: **Ready**
 
 ---
 
@@ -40,7 +42,7 @@ Actual stage: **Work in progress**
 
 - Actual stage of final sample: **Awaiting acceptance in MNRAS**
 
-- Actual stage of scripts and package: **Developing general use version**
+- Actual stage of package: **Developing general use package**
 
 ---
 
