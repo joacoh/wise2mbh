@@ -149,7 +149,7 @@ def w2w3_to_morph(color, mc=False):
     t_value = params[2]*logit(color_desp_norm)+params[3]
     if mc:
         params_mc = [1.20656567, 1.36157769]
-        t_value = wm.param_montecarlo(params_mc[0],0.01)*logit(color_desp_norm)+wm.param_montecarlo(params_mc[1],0.02)
+        t_value = param_montecarlo(params_mc[0],0.01)*logit(color_desp_norm)+param_montecarlo(params_mc[1],0.02)
 
     t_value = np.where((t_value<-5) | (color_desp_norm<=0), -5, t_value)
     t_value = np.where((t_value>8) | (color_desp_norm>=1), 8, t_value)
@@ -208,9 +208,9 @@ def bulge_to_mbh(bulgemass, mc=False):
     mbh = 1.24*(bulgemass - 11) +8.8
 
     if mc:
-        param1 = wm.param_montecarlo(1.24,0.08)
-        param2 = wm.param_montecarlo(8.8,0.09)
-        sct = wm.param_montecarlo(0,0.68)
+        param1 = param_montecarlo(1.24,0.08)
+        param2 = param_montecarlo(8.8,0.09)
+        sct = param_montecarlo(0,0.68)
 
         mbh = param1*(bulgemass - 11) + param2 + sct
     return mbh
