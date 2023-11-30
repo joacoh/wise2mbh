@@ -24,9 +24,10 @@ Pre-requisites are a Python version `>=3.8` and have `numpy-1.23.5`, `scipy-1.9.
 ---
 ### Scripts and Tutorials
 
-A general script and tutorials for the generation of input samples and use of the functions will be provided in the near future!
+A solid pipeline has been developed for internal-use only on the ETHER sample and a modified version will be provided in the near future!
+Right now, everybody can build a script with the provided functions and tutorials. Be aware of matrix sizes when using the MC approach.
 
-Actual stage of scripts: **Work in progress**
+Actual stage of public pipeline: **Work in progress**
 
 Actual stage of tutorials: **Ready**
 
