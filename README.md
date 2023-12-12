@@ -27,7 +27,7 @@ Pre-requisites are a Python version `>=3.8` and have `numpy-1.23.5`, `scipy-1.9.
 A solid pipeline has been developed for internal-use only on the ETHER sample and a modified version will be provided in the near future!
 Right now, everybody can build a script with the provided functions and tutorials. Be aware of matrix sizes when using the MC approach.
 
-Actual stage of public pipeline: **Work in progress**
+Actual stage of public pipeline: **Ready**
 
 Actual stage of tutorials: **Ready**
 
@@ -35,11 +35,13 @@ Actual stage of tutorials: **Ready**
 
 ### About this project
 
-- WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH)
+- WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH). It was presented at XVII RRLA-LARIM in Montevideo as a poster that can be seen [here](https://joacoh.github.io/talks/2023-11-29-talk) and a proceeding was submitted.
 
 - It implements a Monte Carlo approach for error propagation, considering mean photometric errors from WISE magnitudes, errors in fits of scaling relations used and scatter of those relations, if available.
 
 - Actual stage of publication: **Submitted to MNRAS**
+
+- Actual stage of RRLA-LARIM proceeding: **Submitted to RevMexAA**
 
 - Actual stage of final sample: **Awaiting acceptance in MNRAS**
 
