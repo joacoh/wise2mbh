@@ -45,7 +45,7 @@ Actual stage of tutorials: **Ready**
 
 - Actual stage of final sample: **Awaiting acceptance in MNRAS**
 
-- Actual stage of package: **Developing general use package**
+- Actual stage of package: **stable-0.0.5**
 
 ---
 

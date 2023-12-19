@@ -294,4 +294,26 @@ def w1w2_treshold_qso(w2w3):
     """ 
     w1w2_tresh = (0.05*w2w3)+0.38
     return w1w2_tresh
+
+def drop_irregulars(strings):
+    def criteria(string):
+        for i in range(len(string)-1):
+            if ((string[i].isupper()) and (string[i + 1] == 'm')) | (string[0]=='I'):
+                return False
+        return True
+    boolean_array = [criteria(string) for string in strings]
+    return np.array(boolean_array)
+
+def keep_first_and_non_capitals(strings):
+    def criteria(string):
+        result = string[0]  # Initialize the result with the first letter
+
+        # Iterate through the remaining characters in the string
+        for char in string[1:]:
+            if char.islower() or not char.isalpha():
+                result += char
+
+        return result.strip()
+    output = [criteria(s) for s in strings]
+    return np.array(output)
 # %%
