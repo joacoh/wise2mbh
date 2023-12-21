@@ -225,7 +225,7 @@ def comp_mbh(mbh):
     Output:
     new_mbh (numpy.ndarray): array-like object of compensated MBH values
     """ 
-    params = [-0.18062595,  1.72608017]
+    params = [-0.10378699,  0.98153064]
     comp_par = params[0]*mbh + params[1]   #derived in notebook for the defined control sample
     new_mbh = mbh + comp_par
 
