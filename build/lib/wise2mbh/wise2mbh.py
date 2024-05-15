@@ -194,7 +194,7 @@ def morph_to_bulge_ratio(t_value):
 
     return b_ratio
 
-def bulge_to_mbh(bulgemass, mc=False, n=1000, n=n):
+def bulge_to_mbh(bulgemass, mc=False, n=1000):
     """
     Bulge Mass to Black Hole Mass from Schutte+2019
 
