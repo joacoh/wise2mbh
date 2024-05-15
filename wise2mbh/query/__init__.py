@@ -96,4 +96,68 @@ def xmatch_allwise(input_table, ra_column='RA', dec_column='DEC', radius=3):
                      max_distance=radius*u.arcsec, colRA1=ra_column,
                      colDec1=dec_column)
     return table
+
+"""
+Simple XMatch function between Pandas DataFrames
+Inputs:
+cat: Catalogue to match
+master: Master catalogue to match (put here the biggest of the two cat to match)
+names: Name column of the sources in cat
+cat_ra: RA column in cat
+cat_dec: DEC column in cat
+master_ra: RA column in master
+master_dec: DEC column in master
+tol_coord: Radius limit to match a source
+sources: If True, print every matched sources. False by default
+
+Outputs:
+cat_ids: List of the rows IDs that match in cat
+master_ids: List of the rows IDs that match in master
+"""
+def simple_xmatch(cat,master,names='NAME',cat_ra='RA',cat_dec='DEC',master_ra='RA',master_dec='DEC', tol_coord=5, sources=False):
+
+    ra = cat[cat_ra]
+    dec = cat[cat_dec]
+    names = cat[names]
+
+    tol_coord = tol_coord/3600
+    cat_ids = []
+    master_ids = []
+    if len(names)!=len(ra)!=len(dec):
+        raise ValueError('Names and coordinates must have the same length')
+    else:
+        print('Crossmatching with a tolerance of {} arc-second(s) difference'.format(tol_coord*3600))
+        count = 0  
+        for i in np.arange(len(names)):
+            matches = 0
+            name = names[i]
+            ra2match = ra[i]
+            dec2match = dec[i]
+
+            master_masked = master[master[master_dec].between(dec2match-tol_coord,dec2match+tol_coord)]
+            ra4cat = master_masked[master_ra]
+            dec4cat = master_masked[master_dec]
+
+            dist = np.sqrt((ra2match-ra4cat)**2 + (dec2match-dec4cat)**2)   #Substraction to analyze
+
+            cond1 = (dist<=tol_coord)*(min(dist, default=False)==dist)       #Boolean array of condition after match
+            cond2 = [j for j, x in enumerate(cond1) if x]                    #Takes the index of True values only
+            if len(cond2)!=0:
+                cond2 = [cond2[0]] 
+                
+            for k in cond2:
+                master_ids.append(master_masked.index[k])                  #Save index of match in ETHER
+                matches += 1
+                count += 1
+
+            if matches>0:
+                cat_ids.append(cat.index[i])
+                if sources:
+                    print('Source {} has a match!'.format(name))
+            
+            if len(cat_ids)!=len(master_ids):
+                raise ValueError('Corrupted Series in DataFrame')
+
+        print('Total matches: {}'.format(count))
+        return cat_ids, master_ids
 # %%

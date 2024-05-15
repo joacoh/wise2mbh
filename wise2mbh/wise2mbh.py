@@ -130,7 +130,7 @@ def distance_modulus_dist(dist):
     mu = 5*np.log10(dist*1e6)-5
     return mu
 
-def w2w3_to_morph(color, mc=False):
+def w2w3_to_morph(color, mc=False, n=1000):
     """
     WISE Color 2 T-value morphological type
 
@@ -149,7 +149,7 @@ def w2w3_to_morph(color, mc=False):
     t_value = params[2]*logit(color_desp_norm)+params[3]
     if mc:
         params_mc = [1.20656567, 1.36157769]
-        t_value = param_montecarlo(params_mc[0],0.01)*logit(color_desp_norm)+param_montecarlo(params_mc[1],0.02)
+        t_value = param_montecarlo(params_mc[0],0.01,n=n)*logit(color_desp_norm)+param_montecarlo(params_mc[1],0.02,n=n)
 
     t_value = np.where((t_value<-5) | (color_desp_norm<=0), -5, t_value)
     t_value = np.where((t_value>8) | (color_desp_norm>=1), 8, t_value)
@@ -194,7 +194,7 @@ def morph_to_bulge_ratio(t_value):
 
     return b_ratio
 
-def bulge_to_mbh(bulgemass, mc=False):
+def bulge_to_mbh(bulgemass, mc=False, n=1000, n=n):
     """
     Bulge Mass to Black Hole Mass from Schutte+2019
 
@@ -208,9 +208,9 @@ def bulge_to_mbh(bulgemass, mc=False):
     mbh = 1.24*(bulgemass - 11) +8.8
 
     if mc:
-        param1 = param_montecarlo(1.24,0.08)
-        param2 = param_montecarlo(8.8,0.09)
-        sct = param_montecarlo(0,0.68)
+        param1 = param_montecarlo(1.24,0.08, n=n)
+        param2 = param_montecarlo(8.8,0.09, n=n)
+        sct = param_montecarlo(0,0.68, n=n)
 
         mbh = param1*(bulgemass - 11) + param2 + sct
     return mbh

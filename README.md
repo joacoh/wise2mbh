@@ -11,11 +11,11 @@
 ---
 ### Instalation 
 
-To install `wise2mbh-0.5.2` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
+To install `wise2mbh-0.6` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
 
     sudo apt install git
 
-To install `wise2mbh-0.5.2`, use the following command:
+To install `wise2mbh-0.6`, use the following command:
 
     pip install git+https://github.com/joacoh/wise2mbh.git
 
@@ -31,6 +31,8 @@ Actual stage of public pipeline: **Ready**
 
 Actual stage of tutorials: **Ready**
 
+Actual stage of documentation: **WIP**
+
 ---
 
 ### About this project
@@ -45,7 +47,7 @@ Actual stage of tutorials: **Ready**
 
 - Actual stage of final sample: **Awaiting acceptance in MNRAS**
 
-- Actual stage of package: **stable-0.5.2**
+- Actual stage of package: **stable-0.6**
 
 ---
 
