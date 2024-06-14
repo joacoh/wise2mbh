@@ -41,19 +41,36 @@ Actual stage of documentation: **WIP**
 
 - It implements a Monte Carlo approach for error propagation, considering mean photometric errors from WISE magnitudes, errors in fits of scaling relations used and scatter of those relations, if available.
 
-- Actual stage of publication: **Submitted to MNRAS**
+- Main Publication: **[MNRAS](https://doi.org/10.1093/mnras/stae1372)**
 
-- Actual stage of RRLA-LARIM proceeding: **Submitted to RevMexAA**
+  If the results, discussion, or code is useful for your research, please use the following reference:
 
-- Actual stage of final sample: **Awaiting acceptance in MNRAS**
+  ```
+  @article{10.1093/mnras/stae1372,
+      author = {Hernández-Yévenes, J and Nagar, N and Arratia, V and Jarrett, T H},
+      title = "{WISE2MBH: A scaling-based algorithm for probing supermassive black hole masses through WISE catalogs}",
+      journal = {Monthly Notices of the Royal Astronomical Society},
+      pages = {stae1372},
+      year = {2024},
+      month = {06},
+      issn = {0035-8711},
+      doi = {10.1093/mnras/stae1372},
+      url = {https://doi.org/10.1093/mnras/stae1372},
+      eprint = {https://academic.oup.com/mnras/advance-article-pdf/doi/10.1093/mnras/stae1372/58213090/stae1372.pdf},
+  }
+  ```
 
-- Actual stage of package: **stable-0.6**
+- RRLA-LARIM Proceeding: **Accepted to RevMexAA**
+
+- WIS2MBH final sample: **Available in MNRAS as supplementary material**
+
+- WISE2MBH last version: **stable-0.6**
 
 ---
 
 ### Acknowledgements
 
-- I greatly appreciate the support from my collaborators: **Neil Nagar** (MSc thesis advisor), **Vicente Arratia** and **Thomas H. Jarrett**. Also to **Yuri Kovalev**, **Angelo Ricarte**, and **Dominic Pesce** for useful discussions during my visit at Black Hole Initiative in Harvard and to **Yuhan Yao** for providing comparisons to put in the paper. 
+- I greatly appreciate the support from my collaborators: **Neil Nagar** (MSc thesis advisor), **Vicente Arratia** and **Thomas H. Jarrett**. Also to **Yuri Kovalev**, **Angelo Ricarte**, **Dominic Pesce** and **Priyamvada Natarajan** for useful discussions during my visit at Black Hole Initiative in Harvard and to **Yuhan Yao** for providing comparisons to put in the paper. 
 - We, as a team, acknowledge funding from **ANID Chile via Nucleo Milenio TITANs (Project NCN19-058)**, **Fondecyt Regular (Project 1221421)** and **Basal (Project FB210003)**. T.H.J. acknowledges support from the **National Research Foundation (South Africa)**.
 - All lookup tables were produced by T.H.J and come originally from the publication: [A New Wide-field Infrared Survey Explorer Calibration of Stellar Mass](https://iopscience.iop.org/article/10.3847/1538-4357/acb68f/meta) in ApJ. The original TBL files can be found in the wise2mbh/kcorrections folder. If you just want to use that tables, please consider referencing that publication instead of WISE2MBH.
 - Logos were made by **Benjamín Ramírez**, a very good friend of mine! You can contact him on [Instagram](https://www.instagram.com/iamtwentythreee/) or [Behance](https://www.behance.net/be23r/).
