@@ -29,7 +29,7 @@ Right now, everybody can build a script with the provided functions and tutorial
 
 - Public pipeline: Available as **pipeline.py** on main
 
-- Tutorials: Available on Jupyter notebooks on main/tutorials
+- Tutorials: Notebooks on main/notebooks
 
 - Documentation: **WIP**
 
