@@ -24,14 +24,14 @@ Pre-requisites are a Python version `>=3.8` and have `numpy-1.23.5`, `scipy-1.9.
 ---
 ### Scripts and Tutorials
 
-A solid pipeline has been developed for internal-use only on the ETHER sample and a modified version will be provided in the near future!
+A solid pipeline has been developed for **internal-use only on the ETHER database** and a modified version is already available for public use.
 Right now, everybody can build a script with the provided functions and tutorials. Be aware of matrix sizes when using the MC approach.
 
-Actual stage of public pipeline: **Ready**
+- Public pipeline: Available as **pipeline.py** on main
 
-Actual stage of tutorials: **Ready**
+- Tutorials: Available on Jupyter notebooks on main/tutorials
 
-Actual stage of documentation: **WIP**
+- Documentation: **WIP**
 
 ---
 
@@ -62,7 +62,7 @@ Actual stage of documentation: **WIP**
 
 - RRLA-LARIM Proceeding: **Accepted to RevMexAA**
 
-- WIS2MBH final sample: **Available in MNRAS as supplementary material**
+- WISE2MBH final sample: **Available in MNRAS as supplementary material**
 
 - WISE2MBH last version: **stable-0.6**
 
