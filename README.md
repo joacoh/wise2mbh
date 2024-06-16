@@ -43,7 +43,7 @@ Right now, everybody can build a script with the provided functions and tutorial
 
 - Main Publication: **[MNRAS](https://doi.org/10.1093/mnras/stae1372)**
 
-  If the results, discussion, or code is useful for your research, please use the following reference:
+  If the results, discussion, and/or code are useful for your research, **please use the following reference**:
 
   ```
   @article{10.1093/mnras/stae1372,
@@ -62,7 +62,7 @@ Right now, everybody can build a script with the provided functions and tutorial
 
 - RRLA-LARIM Proceeding: **Accepted to RevMexAA**
 
-- WISE2MBH final sample: **Available in MNRAS as supplementary material**
+- WISE2MBH final sample: Available in MNRAS as **supplementary material** --- Soon on CDS/Vizier
 
 - WISE2MBH last version: **stable-0.6**
 
