@@ -48,15 +48,17 @@ Right now, everybody can build a script with the provided functions and tutorial
   ```
   @article{10.1093/mnras/stae1372,
       author = {Hernández-Yévenes, J and Nagar, N and Arratia, V and Jarrett, T H},
-      title = "{WISE2MBH: A scaling-based algorithm for probing supermassive black hole masses through WISE catalogs}",
+      title = "{WISE2MBH: a scaling-based algorithm for probing supermassive black hole masses through WISE catalogues}",
       journal = {Monthly Notices of the Royal Astronomical Society},
-      pages = {stae1372},
+      volume = {531},
+      number = {4},
+      pages = {4503-4523},
       year = {2024},
       month = {06},
       issn = {0035-8711},
       doi = {10.1093/mnras/stae1372},
       url = {https://doi.org/10.1093/mnras/stae1372},
-      eprint = {https://academic.oup.com/mnras/advance-article-pdf/doi/10.1093/mnras/stae1372/58213090/stae1372.pdf},
+      eprint = {https://academic.oup.com/mnras/advance-article-pdf/doi/10.1093/mnras/stae1372/58278752/stae1372.pdf},
   }
   ```
 
