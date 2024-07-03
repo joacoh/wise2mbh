@@ -1,5 +1,5 @@
-numpy
-astropy
-scipy
-pandas
-astroquery
+numpy>=1.26.4
+astropy>=6.0.0
+scipy>=1.12.0
+pandas>=2.2.1
+astroquery>=0.4.6

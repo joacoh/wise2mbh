@@ -11,15 +11,15 @@
 ---
 ### Instalation 
 
-To install `wise2mbh-0.6` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
+To install `wise2mbh-0.6.1` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
 
     sudo apt install git
 
-To install `wise2mbh-0.6`, use the following command:
+To install `wise2mbh-0.6.1`, use the following command:
 
     pip install git+https://github.com/joacoh/wise2mbh.git
 
-Pre-requisites are a Python version `>=3.8` and have `numpy-1.23.5`, `scipy-1.9.3`, `astropy-5.1.1`, `pandas-1.5.2` and `astroquery-0.4.6`
+Pre-requisites are a Python version `>=3.10` and have `numpy-1.26.4`, `scipy-1.12.0`, `astropy-6.0.0`, `pandas-2.2.1` and `astroquery-0.4.6`
 
 ---
 ### Scripts and Tutorials
@@ -66,7 +66,7 @@ Right now, everybody can build a script with the provided functions and tutorial
 
 - WISE2MBH final sample: Available in MNRAS as **supplementary material** --- Soon on CDS/Vizier
 
-- WISE2MBH last version: **stable-0.6**
+- WISE2MBH last version: **stable-0.6.1**
 
 ---
 
