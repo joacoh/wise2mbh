@@ -14,5 +14,4 @@ wise2mbh/kcorrections/E.kcorrection_fw1_w1w2_w1w3.tbl
 wise2mbh/kcorrections/S0.kcorrection_fw1_w1w2_w1w3.tbl
 wise2mbh/kcorrections/Sb.kcorrection_fw1_w1w2_w1w3.tbl
 wise2mbh/kcorrections/__init__.py
-wise2mbh/kcorrections/__pycache__/__init__.cpython-310.pyc
 wise2mbh/query/__init__.py
