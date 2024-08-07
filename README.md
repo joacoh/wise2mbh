@@ -8,9 +8,18 @@
   <img src="logos/WISE2MBH positivo sin fondo.png" width="600"/>
 </div>
 
-[![!Paper](https://img.shields.io/badge/DOI-10.1093%2Fmnras%2Fstae1372-green)](https://doi.org/10.1093/mnras/stae1372)
-[![!arxiv](https://img.shields.io/badge/arXiv-arXiv%3A2405.18336-orange)](https://doi.org/10.48550/arXiv.2405.18336)
-[![!version](https://img.shields.io/badge/version-0.6.1-white)]()
+<div style="text-align: center;">
+    <a href="https://doi.org/10.1093/mnras/stae1372">
+        <img src="https://img.shields.io/badge/DOI-10.1093%2Fmnras%2Fstae1372-blue" alt="!Paper">
+    </a>
+    <a href="https://doi.org/10.48550/arXiv.2405.18336">
+        <img src="https://img.shields.io/badge/arXiv-arXiv%3A2405.18336-orange" alt="!arxiv">
+    </a>
+    <a href="#">
+        <img src="https://img.shields.io/badge/version-0.6.1-white?style=social" alt="!version">
+    </a>
+</div>
+
 
 ---
 ### Instalation 
