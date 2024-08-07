@@ -8,7 +8,7 @@
   <img src="logos/WISE2MBH positivo sin fondo.png" width="600"/>
 </div>
 
-<div style="text-align: center;">
+<div align="center">
     <a href="https://doi.org/10.1093/mnras/stae1372">
         <img src="https://img.shields.io/badge/DOI-10.1093%2Fmnras%2Fstae1372-blue" alt="!Paper">
     </a>
