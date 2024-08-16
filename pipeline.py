@@ -12,8 +12,10 @@ import numpy as np
 from astropy.table import Table
 import gc
 import time
+
 no_data = 9876543.0
 verbose = False
+chunk = 400
 
 '''
 Import and Cleaning pre-processing
@@ -41,7 +43,7 @@ input_sample['INTERNAL_ID'] = np.arange(0,len(input_sample))
 
 input_sample.add_index('INTERNAL_ID')
 
-rows = np.around(np.linspace(0, len(input_sample),200)).astype(int) 
+rows = np.arange(0,len(input_table)+chunk,chunk)
 
 ''' 
 Main algorithm

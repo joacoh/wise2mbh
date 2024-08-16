@@ -6,7 +6,15 @@ import astropy.units as u
 from astroquery.xmatch import XMatch
 import numpy as np
 
-def query_ned(table, ra_column='RA', dec_column='DEC', radius=3, equinox='J2000.0', coords=True, name_column='ONAME', verbose=False):
+from astropy.coordinates import SkyCoord
+from astropy.table import Table, vstack
+from astroquery.ipac.ned import Ned
+import astropy.units as u
+from astroquery.xmatch import XMatch
+import numpy as np
+import time
+
+def query_ned(input_table, ra_column='RA', dec_column='DEC', radius=3, equinox='J2000.0', verbose=False, chunk=400):
     """
     Query NED for additional information based on RA and DEC coordinates or name and merge the results with the input table.
 
@@ -16,25 +24,24 @@ def query_ned(table, ra_column='RA', dec_column='DEC', radius=3, equinox='J2000.
         dec_column (str, optional): Name of the DEC column in the table.
         radius (float, optional): Search radius in arcseconds.
         equinox (str, optional): Equinox for coordinates.
-        coords (boolean, optinal): If you want to use coordinates (True) or names (False).
-        name_column (str, optional): Name of the NAMES column in the table.
         verbose (boolean, optional): If you want to display skiped sources in case of names.
+        chunk (int, optional): Slice size to avoid overflow.
 
     Output:
          table (astropy.table.Table, optinal): Merged table containing NED information. It overwrites the input table.
     """
 
-    if (coords) and (ra_column not in table.colnames or dec_column not in table.colnames):
+    table = input_table
+
+    if (ra_column not in table.colnames or dec_column not in table.colnames):
         raise ValueError(f"Columns '{ra_column}' and '{dec_column}' must exist in the input table.")
     
-    if (not coords) and (ra_column not in table.colnames or dec_column not in table.colnames):
-        raise ValueError(f"Column '{name_column}' must exist in the input table.")
-
     table['INTERNAL_INDEX'] = list(range(len(table)))
     table['Z'] = np.float64(0)
     table['NED_TYPE'] = 'Unknown'
 
-    if coords:
+    if len(table)<=chunk:
+
         coordinates = SkyCoord(table[ra_column].value*u.deg, table[dec_column].value*u.deg, equinox=equinox)
 
         for i, coord in enumerate(coordinates):
@@ -49,15 +56,16 @@ def query_ned(table, ra_column='RA', dec_column='DEC', radius=3, equinox='J2000.
             
             if table['INTERNAL_INDEX'][i] == i:
                 table[i][['Z','NED_TYPE']] = ned_results
+        
+    else:  
+        print('Table size bigger than defined chunk ({}), applying slicing.'.format(chunk))
+        rows = np.arange(0,len(table)+chunk,chunk)
+        ini_query = table[rows[0]:rows[1]]
 
-    else:
-        for i, name in enumerate(table[name_column]):
-            try:
-                ned_results = Ned.query_region(name, radius=radius*u.arcsec)
-            except:
-                if verbose:
-                    print(f'No source with name: {name}')
-                continue
+        coordinates = SkyCoord(ini_query[ra_column].value*u.deg, ini_query[dec_column].value*u.deg, equinox=equinox)
+
+        for i, coord in enumerate(coordinates):
+            ned_results = Ned.query_region(coord, radius=radius*u.arcsec)
             
             if len(ned_results)==0:  
                 continue
@@ -66,9 +74,30 @@ def query_ned(table, ra_column='RA', dec_column='DEC', radius=3, equinox='J2000.
             ned_results['Redshift'] = ned_results['Redshift'].filled(0)
             ned_results = ned_results[0][['Redshift','Type']]
             
-            if table['INTERNAL_INDEX'][i] == i:
-                table[i][['Z','NED_TYPE']] = ned_results
+            if ini_query['INTERNAL_INDEX'][i] == i:
+                ini_query[i][['Z','NED_TYPE']] = ned_results       
+
+        for index in range(1, len(rows)-1):
+            temp_table = table[rows[index]:rows[index+1]]
+            coordinates = SkyCoord(temp_table[ra_column].value*u.deg, temp_table[dec_column].value*u.deg, equinox=equinox)
+
+            for i, coord in enumerate(coordinates):
+                ned_results = Ned.query_region(coord, radius=radius*u.arcsec)
+                
+                if len(ned_results)==0:  
+                    continue
+
+                ned_results.sort('Separation')
+                ned_results['Redshift'] = ned_results['Redshift'].filled(0)
+                ned_results = ned_results[0][['Redshift','Type']]
+                
+                if temp_table['INTERNAL_INDEX'][i] == i:
+                    temp_table[i][['Z','NED_TYPE']] = ned_results      
             
+            ini_query = vstack([ini_query,temp_table])
+            time.sleep(1)
+        table = ini_query
+
     table.remove_column('INTERNAL_INDEX')
 
     object_types_to_keep = ['G', 'QSO', 'RadioS']
@@ -78,7 +107,7 @@ def query_ned(table, ra_column='RA', dec_column='DEC', radius=3, equinox='J2000.
 
     return table
 
-def xmatch_allwise(input_table, ra_column='RA', dec_column='DEC', radius=3):
+def xmatch_allwise(input_table, ra_column='RA', dec_column='DEC', radius=3, chunk=400):
     """
     XMatch to AllWISE catalog in Vizier to obtain all necesary data for the algorithm based in RA and DEC coordinates.
 
@@ -87,15 +116,37 @@ def xmatch_allwise(input_table, ra_column='RA', dec_column='DEC', radius=3):
         ra_column (str, optional): Name of the RA column in the table.
         dec_column (str, optional): Name of the DEC column in the table.
         radius (float, optional): Search radius in arcseconds.
+        chunk (int, optional): Slice size to avoid overflow.
 
     Output:
          table (astropy.table.Table, optinal): Merged table containing AllWISE information.
     """
-    table = XMatch.query(cat1=input_table,
-                     cat2='vizier:II/328/allwise',
-                     max_distance=radius*u.arcsec, colRA1=ra_column,
-                     colDec1=dec_column)
-    return table
+
+    if len(input_table)<=chunk:
+
+        table = XMatch.query(cat1=input_table,
+                        cat2='vizier:II/328/allwise',
+                        max_distance=radius*u.arcsec, colRA1=ra_column,
+                        colDec1=dec_column)
+        return table
+
+    else:
+        print('Table size bigger than defined chunk ({}), applying slicing.'.format(chunk))
+        rows = np.arange(0,len(input_table)+chunk,chunk)
+        ini_query = XMatch.query(cat1=input_table[rows[0]:rows[1]],
+                        cat2='vizier:II/328/allwise',
+                        max_distance=radius*u.arcsec, colRA1=ra_column,
+                        colDec1=dec_column)
+
+        for index in range(1, len(rows)-1):
+            next_query = XMatch.query(cat1=input_table[rows[index]:rows[index+1]],
+                            cat2='vizier:II/328/allwise',
+                            max_distance=radius*u.arcsec, colRA1=ra_column,
+                            colDec1=dec_column)
+            ini_query = vstack([ini_query,next_query])
+            time.sleep(1)
+        
+        return ini_query
 
 """
 Simple XMatch function between Pandas DataFrames
