@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: wise2mbh
-Version: 0.6.1
+Version: 0.7
 Summary: Galaxy properties and MBH estimates from WISE
 Home-page: https://github.com/joacoh/wise2mbh
 Author: joacoh (Joaquin Hernández Yévenes)
@@ -14,7 +14,7 @@ Classifier: Operating System :: MacOS :: MacOS X
 Classifier: Operating System :: Microsoft :: Windows
 Requires-Python: ~=3.10
 License-File: LICENSE
-Requires-Dist: numpy>=1.26.4
+Requires-Dist: numpy>=1.23
 Requires-Dist: astropy>=6.0.0
 Requires-Dist: scipy>=1.12.0
 Requires-Dist: pandas>=2.2.1
