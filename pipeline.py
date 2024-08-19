@@ -40,10 +40,12 @@ rejected = size_before_depure - size_after_depure
 print(f'Size after depure: {size_after_depure}')
 
 input_sample['INTERNAL_ID'] = np.arange(0,len(input_sample))
+input_sample['NED_TYPE'] = 'Unknown'
+input_sample['T'] = no_data
 
 input_sample.add_index('INTERNAL_ID')
 
-rows = np.arange(0,len(input_table)+chunk,chunk)
+rows = np.arange(0,len(input_sample)+chunk,chunk)
 
 ''' 
 Main algorithm
@@ -57,23 +59,22 @@ for index in range(0, len(rows)-1):
         print('Iteration from row {} to {} out of {} rows ({}%)'.format(rows[index], rows[index+1], rows[-1], np.around(((rows[index]+rows[index+1])/2)/rows[-1]*100, decimals=2)))
     
     allwise = input_sample.iloc['INTERNAL_ID',rows[index]:rows[index+1]]                    #Take slice of indexes
-
     size_sub_sample = len(allwise)
 
     allwise['W1-W2_obs'] = allwise['W1mag'] - allwise['W2mag']
     allwise['W2-W3_obs'] = allwise['W2mag'] - allwise['W3mag']
 
-    allwise['e_W1mag'] = allwise['e_W1mag'].filled(0)                                       #Replace null errors in WISE bands
-    allwise['e_W2mag'] = allwise['e_W2mag'].filled(0)
-    allwise['e_W3mag'] = allwise['e_W3mag'].filled(0)
+    allwise['e_W1mag'] = np.nan_to_num(allwise['e_W1mag'], copy=True, nan=0.0, posinf=0.0, neginf=0.0)                                    #Replace null errors in WISE bands
+    allwise['e_W2mag'] = np.nan_to_num(allwise['e_W2mag'], copy=True, nan=0.0, posinf=0.0, neginf=0.0)    
+    allwise['e_W3mag'] = np.nan_to_num(allwise['e_W3mag'], copy=True, nan=0.0, posinf=0.0, neginf=0.0)    
 
     w1 = wm.array_montecarlo(allwise['W1mag'],allwise['e_W1mag'])
     w2 = wm.array_montecarlo(allwise['W2mag'],allwise['e_W2mag'])
     w3 = wm.array_montecarlo(allwise['W3mag'],allwise['e_W3mag'])
     z = np.array(allwise['Z'])
 
-    w1w2_obs = w1-w2
-    w2w3_obs = w2-w3
+    w1w2_obs = w1.astype(float)-w2.astype(float)
+    w2w3_obs = w2.astype(float)-w3.astype(float)
 
     first_reject_zone = allwise['W2-W3_obs']<=4.4
 
@@ -197,7 +198,6 @@ for index in range(0, len(rows)-1):
 
     allwise['W1-W2_kcor'] = np.median(w1w2_kcorrected, axis=1)                      #Median value is saved in data frame
     allwise['W2-W3_kcor'] = np.median(w2w3_kcorrected, axis=1)
-
     w1w2_sat_top = wm.clipping_dist(w1w2_kcorrected, 0.6)                           #W1-W2 is saturated between -0.2 and 0.6 for M/L ratios
     w1w2_sat_complete = wm.clipping_dist(w1w2_sat_top, -0.2, greater_than=False)
 
@@ -207,7 +207,7 @@ for index in range(0, len(rows)-1):
     log_sm[np.where(((allwise['ex']==b'5') | (allwise['ex']==b'4')) & (allwise['W2-W3_kcor']<w2w3_limit))[0]] = log_sm_res[np.where(((allwise['ex']==b'5') | (allwise['ex']==b'4')) & (allwise['W2-W3_kcor']<w2w3_limit))[0]]
 
     allwise['logSM'] = np.median(log_sm, axis=1)
-
+    
     low_sm = 6.5            
     high_sm = 13                                                                    #Limit values in log stellar and masking
                                                                                     
