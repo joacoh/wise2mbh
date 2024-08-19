@@ -22,11 +22,11 @@ setup(
     package_data={
         'wise2mbh.kcorrections': ['*.tbl']},
     install_requires=[
-        'numpy>=1.23',
-        'astropy>=6.0.0',
-        'scipy>=1.12.0',
-        'pandas>=2.2.1',
-        'astroquery>=0.4.6'
+        'numpy',
+        'astropy',
+        'scipy',
+        'pandas',
+        'astroquery'
         ],
     keywords=['python'],
     license="MIT",

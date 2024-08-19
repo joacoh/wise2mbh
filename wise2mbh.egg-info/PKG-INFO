@@ -14,8 +14,8 @@ Classifier: Operating System :: MacOS :: MacOS X
 Classifier: Operating System :: Microsoft :: Windows
 Requires-Python: ~=3.10
 License-File: LICENSE
-Requires-Dist: numpy>=1.23
-Requires-Dist: astropy>=6.0.0
-Requires-Dist: scipy>=1.12.0
-Requires-Dist: pandas>=2.2.1
-Requires-Dist: astroquery>=0.4.6
+Requires-Dist: numpy
+Requires-Dist: astropy
+Requires-Dist: scipy
+Requires-Dist: pandas
+Requires-Dist: astroquery
