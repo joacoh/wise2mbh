@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.7'
+VERSION = '0.7.1'
 DESCRIPTION = 'Galaxy properties and MBH estimates from WISE'
 
 # Setting up
@@ -22,11 +22,11 @@ setup(
     package_data={
         'wise2mbh.kcorrections': ['*.tbl']},
     install_requires=[
-        'numpy',
-        'astropy',
-        'scipy',
-        'pandas',
-        'astroquery'
+        'numpy>=1.23',
+        'astropy>=5.3.4',
+        'scipy>=1.12.0',
+        'pandas>=2.2.1',
+        'astroquery>=0.4.6'
         ],
     keywords=['python'],
     license="MIT",

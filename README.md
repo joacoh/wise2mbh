@@ -16,7 +16,7 @@
         <img src="https://img.shields.io/badge/arXiv-arXiv%3A2405.18336-orange" alt="!arxiv">
     </a>
     <a href="#">
-        <img src="https://img.shields.io/badge/version-0.7-white" alt="!version">
+        <img src="https://img.shields.io/badge/version-0.7.1-white" alt="!version">
     </a>
 </div>
 
@@ -24,15 +24,15 @@
 ---
 ### Instalation 
 
-To install `wise2mbh-0.7` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
+To install `wise2mbh-0.7.1` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
 
     sudo apt install git
 
-To install `wise2mbh-0.7`, use the following command:
+To install `wise2mbh-0.7.1`, use the following command:
 
     pip install git+https://github.com/joacoh/wise2mbh.git
 
-Pre-requisites are a Python version `>=3.10` and have `numpy-1.26.4`, `scipy-1.12.0`, `astropy-6.0.0`, `pandas-2.2.1` and `astroquery-0.4.6`
+Pre-requisites are a Python version `>=3.10` and have `numpy-1.23`, `scipy-1.12.0`, `astropy-5.3.4`, `pandas-2.2.1` and `astroquery-0.4.6`, and for this reason **we highly recommend using Wise2mbh in a dedicated Python environment with exact versions**.
 
 ---
 ### Scripts and Tutorials
@@ -56,22 +56,25 @@ Right now, everybody can build a script with the provided functions and tutorial
 
 - Main Publication: **[MNRAS](https://doi.org/10.1093/mnras/stae1372)**
 
-  If the results, discussion, and/or code are useful for your research, **please use the following reference**:
+  If the results, discussion, and/or code are useful for your research, **please consider referencing us**:
 
   ```
-  @article{10.1093/mnras/stae1372,
-      author = {Hernández-Yévenes, J and Nagar, N and Arratia, V and Jarrett, T H},
-      title = "{WISE2MBH: a scaling-based algorithm for probing supermassive black hole masses through WISE catalogues}",
-      journal = {Monthly Notices of the Royal Astronomical Society},
-      volume = {531},
-      number = {4},
-      pages = {4503-4523},
-      year = {2024},
-      month = {06},
-      issn = {0035-8711},
-      doi = {10.1093/mnras/stae1372},
-      url = {https://doi.org/10.1093/mnras/stae1372},
-      eprint = {https://academic.oup.com/mnras/advance-article-pdf/doi/10.1093/mnras/stae1372/58278752/stae1372.pdf},
+  @ARTICLE{2024MNRAS.531.4503H,
+        author = {{Hern{\'a}ndez-Y{\'e}venes}, J. and {Nagar}, N. and {Arratia}, V. and {Jarrett}, T.~H.},
+          title = "{WISE2MBH: a scaling-based algorithm for probing supermassive black hole masses through WISE catalogues}",
+        journal = {\mnras},
+      keywords = {Astrophysics - Astrophysics of Galaxies},
+          year = 2024,
+          month = jul,
+        volume = {531},
+        number = {4},
+          pages = {4503-4523},
+            doi = {10.1093/mnras/stae1372},
+  archivePrefix = {arXiv},
+        eprint = {2405.18336},
+  primaryClass = {astro-ph.GA},
+        adsurl = {https://ui.adsabs.harvard.edu/abs/2024MNRAS.531.4503H},
+        adsnote = {Provided by the SAO/NASA Astrophysics Data System}
   }
   ```
 
@@ -79,7 +82,7 @@ Right now, everybody can build a script with the provided functions and tutorial
 
 - WISE2MBH final sample: Available in MNRAS as **supplementary material** --- Soon on CDS/Vizier
 
-- WISE2MBH last version: **stable-0.7**
+- WISE2MBH last version: **stable-0.7.1**
 
 ---
 
