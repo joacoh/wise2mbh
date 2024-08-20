@@ -21,7 +21,7 @@ chunk = 400
 Import and Cleaning pre-processing
 '''
 
-directory = 'samples/AllWISE_sample.fits'
+directory = 'samples/gz5_wise.fits'
 
 input_sample = Table.read(directory)
 
@@ -43,6 +43,15 @@ input_sample['INTERNAL_ID'] = np.arange(0,len(input_sample))
 input_sample['NED_TYPE'] = 'Unknown'
 input_sample['T'] = no_data
 
+for err in ['e_W1mag','e_W2mag','e_W3mag']:
+    try:
+        fill_err_zero = input_sample[err].data.filled(0)
+        input_sample[err] = fill_err_zero
+        print('{} band present null entries in {} column. Filled with zeros'.format(err[2:4], err))
+    except:
+        print('Every {} band entry have 1-sigma error in the {} column.'.format(err[2:4], err))
+    
+
 input_sample.add_index('INTERNAL_ID')
 
 rows = np.arange(0,len(input_sample)+chunk,chunk)
@@ -52,7 +61,7 @@ Main algorithm
 '''
 
 print('Running WISE2MBH for catalog in {}:'.format(directory))
-for index in range(0, len(rows)-1):
+for index in range(0, 3):
     if index==0:
         start_time = time.time()
     else:
@@ -63,10 +72,6 @@ for index in range(0, len(rows)-1):
 
     allwise['W1-W2_obs'] = allwise['W1mag'] - allwise['W2mag']
     allwise['W2-W3_obs'] = allwise['W2mag'] - allwise['W3mag']
-
-    allwise['e_W1mag'] = np.nan_to_num(allwise['e_W1mag'], copy=True, nan=0.0, posinf=0.0, neginf=0.0)                                    #Replace null errors in WISE bands
-    allwise['e_W2mag'] = np.nan_to_num(allwise['e_W2mag'], copy=True, nan=0.0, posinf=0.0, neginf=0.0)    
-    allwise['e_W3mag'] = np.nan_to_num(allwise['e_W3mag'], copy=True, nan=0.0, posinf=0.0, neginf=0.0)    
 
     w1 = wm.array_montecarlo(allwise['W1mag'],allwise['e_W1mag'])
     w2 = wm.array_montecarlo(allwise['W2mag'],allwise['e_W2mag'])
