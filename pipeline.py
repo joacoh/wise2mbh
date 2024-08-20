@@ -21,7 +21,8 @@ chunk = 400
 Import and Cleaning pre-processing
 '''
 
-directory = 'samples/gz5_wise.fits'
+directory = 'samples/AllWISE_sample.fits'
+save_csv = False
 
 input_sample = Table.read(directory)
 
@@ -61,7 +62,7 @@ Main algorithm
 '''
 
 print('Running WISE2MBH for catalog in {}:'.format(directory))
-for index in range(0, 3):
+for index in range(0, len(rows)-1):
     if index==0:
         start_time = time.time()
     else:
@@ -311,7 +312,7 @@ for index in range(0, 3):
         for col in cols:
             input_sample[col] = (np.ones(len(input_sample))*no_data).astype(allwise[col].dtype)
 
-    input_sample.loc[allwise['INTERNAL_ID']] = allwise
+    input_sample.loc[final_allwise['INTERNAL_ID']] = final_allwise
     
     del allwise, bf_all, bulge_frac, log_bm, log_mbh, log_sm, comp_mbh, new_t_value, t_value_dist
     gc.collect()
@@ -326,6 +327,9 @@ for index in range(0, 3):
         print('Succesfully finished!')
         print('Total rejected sources: {}'.format(rejected))
 
-#final_allwise.write('enter_your_route_here.fits')
+if save_csv:
+    input_sample.write(directory[:-5]+'-w2m.csv')
+else:
+    input_sample.write(directory[:-5]+'-w2m.fits')
 # %%
 
