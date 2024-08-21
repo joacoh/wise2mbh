@@ -1,12 +1,5 @@
 # %%
 from astropy.coordinates import SkyCoord
-from astropy.table import Table
-from astroquery.ipac.ned import Ned
-import astropy.units as u
-from astroquery.xmatch import XMatch
-import numpy as np
-
-from astropy.coordinates import SkyCoord
 from astropy.table import Table, vstack
 from astroquery.ipac.ned import Ned
 import astropy.units as u
