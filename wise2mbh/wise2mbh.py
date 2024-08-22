@@ -6,6 +6,8 @@ from numpy.random import default_rng
 from wise2mbh.kcorrections import ekcorr, skcorr, lkcorr
 rng = default_rng()
 
+mc_size = 1e3
+
 def kcorr_table(morphtype='E'):
     """ 
     K-correction look-up table from Jarrett+2023 for a set of WISE colors (W1,W1W2,W1W3,W3W4,W2W3).
@@ -23,7 +25,7 @@ def kcorr_table(morphtype='E'):
         table = lkcorr
     return table
 
-def param_montecarlo(nominal=0, std=1, n=1000):
+def param_montecarlo(nominal=0, std=1, n=mc_size):
     """
     Parameter Monte Carlo for error propagation / application of scatter.
 
@@ -64,7 +66,7 @@ def clipping_dist(array, tresh, val=0.01, greater_than=True):
                 m = np.mean(new_array[i,:])
     return new_array
 
-def array_montecarlo(nominal, std, n=1000):
+def array_montecarlo(nominal, std, n=mc_size):
     """
     Array of Monte Carlo distributions for an array M of quantities
 
@@ -130,7 +132,7 @@ def distance_modulus_dist(dist):
     mu = 5*np.log10(dist*1e6)-5
     return mu
 
-def w2w3_to_morph(color, mc=False, n=1000):
+def w2w3_to_morph(color, mc=False, n=mc_size):
     """
     WISE Color 2 T-value morphological type
 
@@ -194,7 +196,7 @@ def morph_to_bulge_ratio(t_value):
 
     return b_ratio
 
-def bulge_to_mbh(bulgemass, mc=False, n=1000):
+def bulge_to_mbh(bulgemass, mc=False, n=mc_size):
     """
     Bulge Mass to Black Hole Mass from Schutte+2019
 
