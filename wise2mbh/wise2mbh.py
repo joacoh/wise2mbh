@@ -6,7 +6,7 @@ from numpy.random import default_rng
 from wise2mbh.kcorrections import ekcorr, skcorr, lkcorr
 rng = default_rng()
 
-mc_size = 1e3
+mc_size = 1000
 
 def kcorr_table(morphtype='E'):
     """ 
