@@ -245,7 +245,7 @@ def get_correction_factor(lookup_table, redshift, correction_factor='W2-W3'):
     Output:
     to_return (float or numpy.ndarray): K-correction factors for selected color
     """ 
-    if isinstance(redshift, (float,int,np.float64)):
+    if isinstance(redshift, (float,int,np.float64,np.float32)):
         if redshift < lookup_table['z'].min() or redshift > lookup_table['z'].max():
             nearest_values = lookup_table.iloc[np.abs(lookup_table['z'] - redshift).argsort()[:2]]
             return np.interp(redshift, nearest_values['z'], nearest_values[correction_factor])

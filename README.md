@@ -16,7 +16,7 @@
         <img src="https://img.shields.io/badge/arXiv-arXiv%3A2405.18336-orange" alt="!arxiv">
     </a>
     <a href="#">
-        <img src="https://img.shields.io/badge/version-0.7.2-white" alt="!version">
+        <img src="https://img.shields.io/badge/version-0.7.3-white" alt="!version">
     </a>
 </div>
 
@@ -24,11 +24,11 @@
 ---
 ### Instalation 
 
-To install `wise2mbh-0.7.2` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
+To install `wise2mbh-0.7.3` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
 
     sudo apt install git
 
-To install `wise2mbh-0.7.2`, use the following command:
+To install `wise2mbh-0.7.3`, use the following command:
 
     pip install git+https://github.com/joacoh/wise2mbh.git
 
@@ -82,7 +82,7 @@ Right now, everybody can build a script with the provided functions and tutorial
 
 - WISE2MBH final sample: Available in MNRAS as **supplementary material** --- Soon on CDS/Vizier
 
-- WISE2MBH last version: **stable-0.7.2**
+- WISE2MBH last version: **stable-0.7.3**
 
 ---
 
