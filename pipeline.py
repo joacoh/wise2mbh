@@ -102,10 +102,11 @@ for index in range(0, len(rows)-1):
     color_condition_1 = (allwise['W1-W2_obs']>0.8) & (allwise['W2-W3_obs']<2.2)
     color_condition_2 = (allwise['W1-W2_obs']>wm.w1w2_treshold_qso(allwise['W2-W3_obs'])) & (allwise['W2-W3_obs']>=2.2) & (allwise['W2-W3_obs']<=4.4)
 
+    optimal_cond = (allwise['Z']<0.5) & ~object_condition & ~(color_condition_1 | color_condition_2)
     suboptimal_cond = (allwise['Z']>=0.5) & (allwise['Z']<=3) & ~object_condition & ~(color_condition_1 | color_condition_2)
     nok_cond = (allwise['Z']>3) | object_condition | color_condition_1 | color_condition_2
 
-    optimal_sample = allwise[(allwise['Z']<0.5) & ~object_condition & ~(color_condition_1 | color_condition_2)]
+    optimal_sample = allwise[optimal_cond]
     suboptimal_sample = allwise[suboptimal_cond]                                                                            #Samples for k-correcion                
     nok_sample = allwise[nok_cond]
                                                                                            
@@ -118,7 +119,7 @@ for index in range(0, len(rows)-1):
     s_table = wm.kcorr_table('S')
 
     identifier = np.random.choice(np.arange(10), size=3, replace=False)
-    for idn, sample in zip(identifier,[optimal_sample, suboptimal_sample, nok_sample]):
+    for idn, sample, cond in zip(identifier,[optimal_sample, suboptimal_sample, nok_sample], [optimal_cond,suboptimal_cond,nok_cond]):
         if len(sample)!=0:
             if idn!=identifier[2]:                                                                      #Color k-correction for sample with z<0.5
                 object_condition = (sample['NED_TYPE']=='RadioS') | (sample['NED_TYPE']=='QSO')
@@ -173,29 +174,29 @@ for index in range(0, len(rows)-1):
                 no_type_w1abs_kcorrected = no_type_w1_kcorrected - wm.distance_modulus_z(z_no_type)[:,None]         #W1 k-correction for no_type_sources
 
                 if np.shape(no_type_w1abs_kcorrected)==(0,0):
-                    no_type_w1abs_kcorrected = no_type_w1abs_kcorrected.reshape(0,1000)
+                    no_type_w1abs_kcorrected = no_type_w1abs_kcorrected.reshape(0,mc_size)
 
-                w1w2_kcors[e_index] = e_w1w2_kcor
-                w1w2_kcors[l_index] = l_w1w2_kcor                   #W1-W2 k-correctrion factors filled
-                w1w2_kcors[s_index] = s_w1w2_kcor
-                w1w2_kcors[no_type_index] = no_type_w1w2_kcor
+                w1w2_kcors[np.where(cond)[0][e_index]] = e_w1w2_kcor
+                w1w2_kcors[np.where(cond)[0][l_index]] = l_w1w2_kcor                   #W1-W2 k-correctrion factors filled
+                w1w2_kcors[np.where(cond)[0][s_index]] = s_w1w2_kcor
+                w1w2_kcors[np.where(cond)[0][no_type_index]] = no_type_w1w2_kcor
 
-                w2w3_kcors[e_index] = e_w2w3_kcor
-                w2w3_kcors[l_index] = l_w2w3_kcor                   #W2-W3 k-correctrion factors filled
-                w2w3_kcors[s_index] = s_w2w3_kcor
-                w2w3_kcors[no_type_index] = no_type_w2w3_kcor
+                w2w3_kcors[np.where(cond)[0][e_index]] = e_w2w3_kcor
+                w2w3_kcors[np.where(cond)[0][l_index]] = l_w2w3_kcor                   #W2-W3 k-correctrion factors filled
+                w2w3_kcors[np.where(cond)[0][s_index]] = s_w2w3_kcor
+                w2w3_kcors[np.where(cond)[0][no_type_index]] = no_type_w2w3_kcor
 
-                w1abs[e_index] = e_w1abs_kcorrected
-                w1abs[l_index] = l_w1abs_kcorrected                 #W1abs k-corrected filled
-                w1abs[s_index] = s_w1abs_kcorrected
-                w1abs[no_type_index] = no_type_w1abs_kcorrected
+                w1abs[np.where(cond)[0][e_index]] = e_w1abs_kcorrected
+                w1abs[np.where(cond)[0][l_index]] = l_w1abs_kcorrected                 #W1abs k-corrected filled
+                w1abs[np.where(cond)[0][s_index]] = s_w1abs_kcorrected
+                w1abs[np.where(cond)[0][no_type_index]] = no_type_w1abs_kcorrected
                 
             else:
-                w1abs_kcorrected = w1[np.where(nok_cond)[0]] - wm.distance_modulus_z(z[np.where(nok_cond)[0]])[:,None]
-                w1abs[np.where(nok_cond)[0]] = w1abs_kcorrected
+                w1abs_kcorrected = w1[np.where(cond)[0]] - wm.distance_modulus_z(z[np.where(cond)[0]])[:,None]
+                w1abs[np.where(cond)[0]] = w1abs_kcorrected
 
-                w1w2_kcors[np.where(nok_cond)[0]] = 0
-                w2w3_kcors[np.where(nok_cond)[0]] = 0                               #For sources with z>3, no k-correction is applied
+                w1w2_kcors[np.where(cond)[0]] = 0
+                w2w3_kcors[np.where(cond)[0]] = 0                               #For sources with z>3, no k-correction is applied
         else:
             continue
  
