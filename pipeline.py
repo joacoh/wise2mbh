@@ -16,6 +16,9 @@ import time
 no_data = 9876543.0
 verbose = False
 chunk = 400
+mc_size = int(1e3)
+
+print('Running with an MC size of {}, if this is not correct, please abort.'.format(mc_size))
 
 '''
 Import and Cleaning pre-processing
@@ -74,9 +77,9 @@ for index in range(0, len(rows)-1):
     allwise['W1-W2_obs'] = allwise['W1mag'] - allwise['W2mag']
     allwise['W2-W3_obs'] = allwise['W2mag'] - allwise['W3mag']
 
-    w1 = wm.array_montecarlo(allwise['W1mag'],allwise['e_W1mag'])
-    w2 = wm.array_montecarlo(allwise['W2mag'],allwise['e_W2mag'])
-    w3 = wm.array_montecarlo(allwise['W3mag'],allwise['e_W3mag'])
+    w1 = wm.array_montecarlo(allwise['W1mag'],allwise['e_W1mag'],n=mc_size)
+    w2 = wm.array_montecarlo(allwise['W2mag'],allwise['e_W2mag'],n=mc_size)
+    w3 = wm.array_montecarlo(allwise['W3mag'],allwise['e_W3mag'],n=mc_size)
     z = np.array(allwise['Z'])
 
     w1w2_obs = w1.astype(float)-w2.astype(float)
@@ -238,7 +241,7 @@ for index in range(0, len(rows)-1):
     w2w3_to_use = w2w3_kcorrected[np.where(cond_change_t)[0]]                                                                   #w2w3 is masked once again, now for noQSO that require a new T
     new_t_value = wm.w2w3_to_morph(w2w3_to_use)                                                                                 #new T values are calculated using S-shape curve
 
-    t_value_dist = wm.array_montecarlo(allwise['T'], np.zeros(len(allwise['T'])))  #Gaussians of every T value
+    t_value_dist = wm.array_montecarlo(allwise['T'], np.zeros(len(allwise['T'])), n=mc_size)  #Gaussians of every T value
     t_value_dist[cond_change_t] = new_t_value
 
     allwise['T_USED'] = -99                                                                                                  #T values selected are changed
@@ -267,12 +270,12 @@ for index in range(0, len(rows)-1):
     bulge_frac = wm.morph_to_bulge_ratio(t_value_dist)                                               #Bulge fractions are calculated for noQSO using the T value
     allwise['BT'] = np.where(allwise_estim_cond, np.median(bulge_frac, axis=1), allwise['BT'])
 
-    bf_all = wm.array_montecarlo(np.ones(len(allwise)), np.zeros(len(allwise)))    #Bulge ratios are overwritten and its median is saved
+    bf_all = wm.array_montecarlo(np.ones(len(allwise)), np.zeros(len(allwise)), n=mc_size)    #Bulge ratios are overwritten and its median is saved
     bf_all[allwise_estim_cond] = bulge_frac[allwise_estim_cond]
 
     log_bm = np.log10(bf_all) + log_sm                                  #Bulge mass is calculated with Stellar mass
   
-    log_mbh = wm.bulge_to_mbh(log_bm)
+    log_mbh = wm.bulge_to_mbh(log_bm, mc=True, n=mc_size)
 
     comp_mbh = wm.comp_mbh(log_mbh)                                      #Empiriclly ompensated MBH 
 

@@ -297,6 +297,41 @@ def w1w2_treshold_qso(w2w3):
     w1w2_tresh = (0.05*w2w3)+0.38
     return w1w2_tresh
 
+def w3_to_SFR(w3,w2w3,z,mc=False,n=mc_size):
+    f_v0 = 29.045                       #zero magnitude flux density fora assumed constant power-law (https://wise2.ipac.caltech.edu/docs/release/allsky/expsup/sec4_4h.html)
+    sun_ergs = np.log10(3.839e33)       #from Jarret+13 in ergs/s (https://iopscience.iop.org/article/10.1088/0004-6256/145/1/6)
+    flux_dens = f_v0*(10**(- w3/2.5))   #Eq. 1 from same documentation as above, in Jansky (10-26 W m-2 Hz-1)
+
+    consts = [0.02172314, 2.09222101, 0.91801391]
+    fc = consts[0] * ((w2w3-consts[1])**2) + consts[2]  #get correction factor
+    flux_dens_corr = flux_dens/fc                       #flux corrected by color
+
+    hz_W3 = 3e8/1.2e-5                  #12 micrometers to Hz (for vLv)
+
+    dist_in_mpc = cosmo.luminosity_distance(z).value
+    dist_in_m = dist_in_mpc*3.085e22    # to meters
+
+    flux_watts = flux_dens_corr*10e-26          # in W m-2 Hz-1
+    lum_nu = 4*np.pi*flux_watts*(dist_in_m**2)  # in W Hz-1
+    nu_lum_nu = hz_W3*lum_nu                    # in W
+
+    nu_lum_nu_ergs = nu_lum_nu*1e6              # W to ergs/s
+    log_nu_lum = np.log10(nu_lum_nu_ergs)       # to log scales
+    log_nu_lum_lsun = log_nu_lum - sun_ergs     # divided by solar luminosity
+
+    wise_sfr = 0.889*log_nu_lum_lsun - 7.76     # from Cluver+17 (https://iopscience.iop.org/article/10.3847/1538-4357/aa92c7/pdf)
+
+    if mc==True:
+        param1 = param_montecarlo(0.889,0.018,n=n)
+        param2 = param_montecarlo(7.76,0.15,n=n)
+        scatter = param_montecarlo(0,0.15,n=n)
+
+        wise_sfr = param1*log_nu_lum_lsun + param2 + scatter
+
+    return wise_sfr
+
+# FUNCTIONS FOR WXSC TUTORIALS ONLY, NOT IMPORTANT AND VERY SPECIFIC
+
 def drop_irregulars(strings):
     def criteria(string):
         for i in range(len(string)-1):
