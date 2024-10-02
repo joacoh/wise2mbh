@@ -297,7 +297,7 @@ def w1w2_treshold_qso(w2w3):
     w1w2_tresh = (0.05*w2w3)+0.38
     return w1w2_tresh
 
-def w3_to_SFR(w3,w2w3,z,mc=False,n=mc_size):
+def w3_to_SFR(w3,w2w3,z,ulirgs=False,mc=False,n=mc_size):
     """
     log SFR from W3 magnitude, using Cluver+17 relation
 
@@ -334,10 +334,20 @@ def w3_to_SFR(w3,w2w3,z,mc=False,n=mc_size):
 
     wise_sfr = 0.889*log_nu_lum_lsun - 7.76     # from Cluver+17 (https://iopscience.iop.org/article/10.3847/1538-4357/aa92c7/pdf)
 
-    if mc==True:
+    if ulirgs:
+        wise_sfr = 1.43*log_nu_lum_lsun - 13.17 # from Cluver+17 but for AGN/ULIRGS (https://iopscience.iop.org/article/10.3847/1538-4357/aa92c7/pdf)
+
+    if mc & (not ulirgs):
         param1 = param_montecarlo(0.889,0.018,n=n)
         param2 = param_montecarlo(-7.76,0.15,n=n)
         scatter = param_montecarlo(0,0.15,n=n)
+
+        wise_sfr = param1*log_nu_lum_lsun + param2 + scatter
+    
+    if mc & ulirgs:
+        param1 = param_montecarlo(1.43,0.161,n=n)
+        param2 = param_montecarlo(-13.17,1.66,n=n)
+        scatter = param_montecarlo(0,0.22,n=n)
 
         wise_sfr = param1*log_nu_lum_lsun + param2 + scatter
 
