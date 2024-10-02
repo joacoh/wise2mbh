@@ -85,6 +85,11 @@ for index in range(0, len(rows)-1):
     w1w2_obs = w1.astype(float)-w2.astype(float)
     w2w3_obs = w2.astype(float)-w3.astype(float)
 
+    sfr = wm.w3_to_SFR(w3,w2w3_obs,z[:,None],mc=True,n=mc_size)
+
+    allwise['logSFR'] = np.median(sfr, axis=1)          #16, 50 and 84 percentile values saved for final SFR
+    allwise['low_logSFR'], allwise['high_logSFR'] = np.percentile(sfr, [16,84], axis=1)
+
     first_reject_zone = allwise['W2-W3_obs']<=4.4
 
     w1 = w1[first_reject_zone]
@@ -280,7 +285,7 @@ for index in range(0, len(rows)-1):
     comp_mbh = wm.comp_mbh(log_mbh)                                      #Empiriclly ompensated MBH 
 
     allwise['logMBH'] = np.median(comp_mbh, axis=1)          #16, 50 and 84 percentile values saved for final MBH
-    allwise['low_logMBH'], allwise['high_logMBH'] = np.percentile(comp_mbh, [16,84], axis=1)[0], np.percentile(comp_mbh, [16,84], axis=1)[-1]
+    allwise['low_logMBH'], allwise['high_logMBH'] = np.percentile(comp_mbh, [16,84], axis=1)
 
     allwise['MBHWISEUPLIM'] = 0
     allwise['MBHWISEUPLIM'] = np.where(allwise_uplim_cond, 1, allwise['MBHWISEUPLIM'])
@@ -310,7 +315,7 @@ for index in range(0, len(rows)-1):
 
     rejected += to_add
 
-    cols = ['W1-W2_obs','W2-W3_obs','K_QUALITY','W1-W2_kcor','W2-W3_kcor','logSM','BT','T_USED','T_QUALITY','logMBH','low_logMBH','high_logMBH','MBHWISEUPLIM','QF']
+    cols = ['W1-W2_obs','W2-W3_obs','logSFR','low_logSFR','high_logSFR','K_QUALITY','W1-W2_kcor','W2-W3_kcor','logSM','BT','T_USED','T_QUALITY','logMBH','low_logMBH','high_logMBH','MBHWISEUPLIM','MBHWISEQUALITY','QF']
 
     if not np.isin('K_QUALITY',input_sample.colnames):
         for col in cols:
@@ -327,9 +332,10 @@ for index in range(0, len(rows)-1):
         print('Estimated total time: {} minutes'.format(np.around((elapsed_time*len(rows)/60)+3.5, decimals=1)))
         print('Iteration from row {} to {} out of {} rows ({}%)'.format(rows[index], rows[index+1], rows[-1], np.around(((rows[index]+rows[index+1])/2)/rows[-1]*100, decimals=2)))
 
-    if index==range(0, len(rows)-1)[-1]:
-        print('Succesfully finished!')
-        print('Total rejected sources: {}'.format(rejected))
+input_sample  = input_sample[(input_sample['logMBH']!=no_data) & (input_sample['logMBH']>=5)]
+
+print('Succesfully finished!')
+print('Total rejected sources: {}'.format(rejected))
 
 if save_csv:
     input_sample.write(directory[:-5]+'-w2m.csv')
