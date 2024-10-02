@@ -345,11 +345,21 @@ def w3_to_SFR(w3,w2w3,z,ulirgs=False,mc=False,n=mc_size):
         wise_sfr = param1*log_nu_lum_lsun + param2 + scatter
     
     if mc & ulirgs:
+        param1 = param_montecarlo(0.889,0.018,n=n)
+        param2 = param_montecarlo(-7.76,0.15,n=n)
+        scatter = param_montecarlo(0,0.15,n=n)
+
+        wise_sfr = param1*log_nu_lum_lsun + param2 + scatter
+
+        ids = np.where(log_nu_lum_lsun.mean(axis=1)>=10)[0]
+
         param1 = param_montecarlo(1.43,0.161,n=n)
         param2 = param_montecarlo(-13.17,1.66,n=n)
         scatter = param_montecarlo(0,0.22,n=n)
 
-        wise_sfr = param1*log_nu_lum_lsun + param2 + scatter
+        wise_sfr_ulirgs = param1*log_nu_lum_lsun[ids] + param2 + scatter
+
+        wise_sfr[ids] = wise_sfr_ulirgs
 
     return wise_sfr
 
