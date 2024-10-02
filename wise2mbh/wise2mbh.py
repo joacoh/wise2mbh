@@ -240,7 +240,7 @@ def get_correction_factor(lookup_table, redshift, correction_factor='W2-W3'):
     Inputs:
     lookup_table (pandas.DataFrame): K-correction table to use 
     redshift (float, int or numpy.ndarray): array-like object of redshifts to calculate K-correction
-    correction_factor (str, optional): Color for which to calculate its correction factor, default:W2-W3
+    correction_factor (str, optional): Color for which to calculate its correction factor, default: 'W2-W3'
 
     Output:
     to_return (float or numpy.ndarray): K-correction factors for selected color
@@ -298,12 +298,25 @@ def w1w2_treshold_qso(w2w3):
     return w1w2_tresh
 
 def w3_to_SFR(w3,w2w3,z,mc=False,n=mc_size):
+    """
+    log SFR from W3 magnitude, using Cluver+17 relation
+
+    Inputs:
+    w3 (float or numpy.ndarray): W3 magnitude, in mag
+    w2w3 (float or numpy.ndarray): Observed W2-W3 color
+    z (float): Redshift of the object
+    mc (bool): Use of MC error propagation, default: False
+    n (int): Size of the MC array used, default: mc_size
+
+    Output:
+    wise_sfr (float or numpy.ndarray): log SFR (in M_Sun/yr)
+    """ 
     f_v0 = 29.045                       #zero magnitude flux density fora assumed constant power-law (https://wise2.ipac.caltech.edu/docs/release/allsky/expsup/sec4_4h.html)
     sun_ergs = np.log10(3.839e33)       #from Jarret+13 in ergs/s (https://iopscience.iop.org/article/10.1088/0004-6256/145/1/6)
     flux_dens = f_v0*(10**(- w3/2.5))   #Eq. 1 from same documentation as above, in Jansky (10-26 W m-2 Hz-1)
 
     consts = [0.02172314, 2.09222101, 0.91801391]
-    fc = consts[0] * ((w2w3-consts[1])**2) + consts[2]  #get correction factor
+    fc = consts[0] * ((w2w3-consts[1])**2) + consts[2]  #get correction factor based on W2-W3 obs color from Wright+10 (https://iopscience.iop.org/article/10.1088/0004-6256/140/6/1868/pdf)
     flux_dens_corr = flux_dens/fc                       #flux corrected by color
 
     hz_W3 = 3e8/1.2e-5                  #12 micrometers to Hz (for vLv)
@@ -323,7 +336,7 @@ def w3_to_SFR(w3,w2w3,z,mc=False,n=mc_size):
 
     if mc==True:
         param1 = param_montecarlo(0.889,0.018,n=n)
-        param2 = param_montecarlo(7.76,0.15,n=n)
+        param2 = param_montecarlo(-7.76,0.15,n=n)
         scatter = param_montecarlo(0,0.15,n=n)
 
         wise_sfr = param1*log_nu_lum_lsun + param2 + scatter
