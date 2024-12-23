@@ -242,6 +242,15 @@ for index in range(0, len(rows)-1):
     allwise['BT'] = no_data
     allwise['BT'] = np.where(allwise_uplim_cond,1, allwise['BT'])
 
+    w1w2_for_agn = allwise['W1-W2_obs']
+    w1w2_for_agn[w1w2_for_agn>1.2] = 1.2
+    w1w2_for_agn[w1w2_for_agn<0.5] = 0.5
+
+    agn_frac_dirty = wm.agn_fraction(w1w2_for_agn)
+    agn_frac_ready = np.where(allwise_estim_cond, 1, agn_frac_dirty)
+
+    allwise['AGN_FRACTION'] = agn_frac_ready
+
     cond_change_t = (allwise_estim_cond) & ((allwise['T']==no_data) | (allwise['T']>8) | (allwise['T']<-5))     #Condition to change morphological value
     w2w3_to_use = w2w3_kcorrected[np.where(cond_change_t)[0]]                                                                   #w2w3 is masked once again, now for noQSO that require a new T
     new_t_value = wm.w2w3_to_morph(w2w3_to_use)                                                                                 #new T values are calculated using S-shape curve
@@ -279,14 +288,20 @@ for index in range(0, len(rows)-1):
     bf_all[allwise_estim_cond] = bulge_frac[allwise_estim_cond]
 
     log_bm = np.log10(bf_all) + log_sm                                  #Bulge mass is calculated with Stellar mass
+    log_sm_agn_cleaned = np.log10(allwise['AGN_FRACTION']) + log_bm
   
-    log_mbh = wm.bulge_to_mbh(log_bm, mc=True, n=mc_size)
+    log_mbh = wm.bulge_to_mbh(log_bm,mc=True,n=mc_size)
+    log_mbh_cleaned = wm.bulge_to_mbh(log_sm_agn_cleaned,mc=True,n=mc_size)
 
-    comp_mbh = wm.comp_mbh(log_mbh)                                      #Empiriclly ompensated MBH 
+    comp_mbh = wm.comp_mbh(log_mbh)                                      #Empiriclly ompensated MBH
+    comp_mbh_cleaned = wm.comp_mbh(log_mbh_cleaned)
 
     allwise['logMBH'] = np.median(comp_mbh, axis=1)          #16, 50 and 84 percentile values saved for final MBH
     allwise['low_logMBH'], allwise['high_logMBH'] = np.percentile(comp_mbh, [16,84], axis=1)
 
+    allwise['logMBH_AGN_Cleaned'] = np.median(comp_mbh, axis=1)          #16, 50 and 84 percentile values saved for final MBH
+    allwise['low_logMBH_AGN_Cleaned'], allwise['high_logMBH_AGN_Cleaned'] = np.percentile(comp_mbh, [16,84], axis=1)
+    
     allwise['MBHWISEUPLIM'] = 0
     allwise['MBHWISEUPLIM'] = np.where(allwise_uplim_cond, 1, allwise['MBHWISEUPLIM'])
 
