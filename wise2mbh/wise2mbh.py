@@ -363,6 +363,19 @@ def w3_to_SFR(w3,w2w3,z,ulirgs=False,mc=False,n=mc_size):
 
     return wise_sfr
 
+def agn_fraction(w1w2):
+    """
+    AGN fraction to consider to avoid contamination from Hernandez-Yevenes+25
+
+    Inputs:
+    w1w2 (float or numpy.ndarray): Observed W1-W2 color
+
+    Output:
+    agn_frac (float or numpy.ndarray): Fraction of the total Mstellar to consider for AGN contaminated sources
+    """ 
+    agn_frac = 0.12 - 0.26 * np.log10(w1w2)
+    return agn_frac
+
 # FUNCTIONS FOR WXSC TUTORIALS ONLY, NOT IMPORTANT AND VERY SPECIFIC
 
 def drop_irregulars(strings):

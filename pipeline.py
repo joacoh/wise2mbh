@@ -1,5 +1,5 @@
 '''
-WISE2MBH Official Pipeline
+WISE2MBH-0.9 Official Pipeline
 
 This is a general use pipeline for correct estimation of MBH using WISE cataloged data.
 This pipeline is intended to work with EVERY SAMPLE GENERATED FROM THE TUTORIALS so please create your input sample from the tutorials in this repository.
