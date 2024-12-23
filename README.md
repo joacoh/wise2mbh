@@ -1,11 +1,11 @@
-<div id="hi" align="center">
-  <h1>
-    Welcome to the WISE2MBH repository!
-    <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="30px"/>
-  </h1>
-</div>
 <div id="header" align="center">
   <img src="logos/WISE2MBH positivo sin fondo.png" width="600"/>
+</div>
+
+<div id="hi" align="center">
+  <h2>
+    Original work
+  </h2>
 </div>
 
 <div align="center">
@@ -17,6 +17,21 @@
     </a>
     <a href="#">
         <img src="https://img.shields.io/badge/version-0.9-white" alt="!version">
+    </a>
+</div>
+
+<div id="hi" align="center">
+  <h2>
+    Updates (coming soon!)
+  </h2>
+</div>
+
+<div align="center">
+    <a href="https://doi.org/10.1093/mnras/stae1372">
+        <img src="https://img.shields.io/badge/WIP-blue" alt="!Paper">
+    </a>
+    <a href="https://doi.org/10.48550/arXiv.2405.18336">
+        <img src="https://img.shields.io/badge/WIP-orange" alt="!arxiv">
     </a>
 </div>
 
@@ -32,7 +47,7 @@ To install `wise2mbh-0.9`, use the following command:
 
     pip install git+https://github.com/joacoh/wise2mbh.git
 
-Pre-requisites are a Python version `>=3.10` and have `numpy-1.23`, `scipy-1.12.0`, `astropy-5.3.4`, `pandas-2.2.1` and `astroquery-0.4.6`, and for this reason **we highly recommend using Wise2mbh in a dedicated Python environment with exact versions**.
+Pre-requisites are a Python version `>=3.10` and have `numpy-1.23`, `scipy-1.12.0`, `astropy-5.3.4`, `pandas-2.2.1` and `astroquery-0.4.6`, and for this reason **we highly recommend using WISE2MBH in a dedicated Python environment with exact versions**.
 
 ---
 ### Scripts and Tutorials
@@ -42,7 +57,7 @@ Right now, everybody can build a script with the provided functions and tutorial
 
 - Public pipeline: Available as **pipeline.py** on main
 
-- Tutorials: Notebooks on main/notebooks
+- Tutorials: **Notebooks on main/notebooks**
 
 - Documentation: **WIP**
 
@@ -50,11 +65,7 @@ Right now, everybody can build a script with the provided functions and tutorial
 
 ### About this project
 
-- WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH). It was presented at XVII RRLA-LARIM in Montevideo as a poster that can be seen [here](https://joacoh.github.io/talks/2023-11-29-talk) and a proceeding was submitted.
-
-- It implements a Monte Carlo approach for error propagation, considering mean photometric errors from WISE magnitudes, errors in fits of scaling relations used and scatter of those relations, if available.
-
-- Main Publication: **[MNRAS](https://doi.org/10.1093/mnras/stae1372)**
+- Main Publication: **[Hernández-Yévenes et al. 2024](https://doi.org/10.1093/mnras/stae1372)**
 
   If the results, discussion, and/or code are useful for your research, **please consider referencing us**:
 
@@ -77,10 +88,13 @@ Right now, everybody can build a script with the provided functions and tutorial
         adsnote = {Provided by the SAO/NASA Astrophysics Data System}
   }
   ```
+- Updates in: **[Hernández-Yévenes et al. in prep.]()**
 
-- RRLA-LARIM Proceeding: **Accepted to RevMexAA**
+- WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH). It was presented at XVII LARIM in Montevideo as a poster that can be seen [here](https://joacoh.github.io/talks/2023-11-29-talk) and a proceeding was accepted.
 
-- WISE2MBH final sample: Available in MNRAS as **supplementary material** --- Soon on CDS/Vizier
+- XVII LARIM Proceeding: **Accepted to RevMexAA**
+
+- WISE2MBH final sample: Available in MNRAS as **supplementary material (outdated)** --- Soon on CDS/Vizier
 
 - WISE2MBH last version: **stable-0.9**
 
