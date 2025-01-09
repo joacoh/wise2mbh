@@ -288,7 +288,7 @@ for index in range(0, len(rows)-1):
     bf_all[allwise_estim_cond] = bulge_frac[allwise_estim_cond]
 
     log_bm = np.log10(bf_all) + log_sm                                  #Bulge mass is calculated with Stellar mass
-    log_sm_agn_cleaned = np.log10(allwise['AGN_FRACTION']) + log_bm
+    log_sm_agn_cleaned = np.log10(allwise['AGN_FRACTION'])[:,None] + log_bm
   
     log_mbh = wm.bulge_to_mbh(log_bm,mc=True,n=mc_size)
     log_mbh_cleaned = wm.bulge_to_mbh(log_sm_agn_cleaned,mc=True,n=mc_size)
@@ -297,10 +297,10 @@ for index in range(0, len(rows)-1):
     comp_mbh_cleaned = wm.comp_mbh(log_mbh_cleaned)
 
     allwise['logMBH'] = np.median(comp_mbh, axis=1)          #16, 50 and 84 percentile values saved for final MBH
-    allwise['low_logMBH'], allwise['high_logMBH'] = np.percentile(comp_mbh, [16,84], axis=1)
+    allwise['low_logMBH'], allwise['high_logMBH'] = np.percentile(comp_mbh_cleaned, [16,84], axis=1)
 
     allwise['logMBH_AGN_Cleaned'] = np.median(comp_mbh, axis=1)          #16, 50 and 84 percentile values saved for final MBH
-    allwise['low_logMBH_AGN_Cleaned'], allwise['high_logMBH_AGN_Cleaned'] = np.percentile(comp_mbh, [16,84], axis=1)
+    allwise['low_logMBH_AGN_Cleaned'], allwise['high_logMBH_AGN_Cleaned'] = np.percentile(comp_mbh_cleaned, [16,84], axis=1)
     
     allwise['MBHWISEUPLIM'] = 0
     allwise['MBHWISEUPLIM'] = np.where(allwise_uplim_cond, 1, allwise['MBHWISEUPLIM'])
@@ -330,11 +330,10 @@ for index in range(0, len(rows)-1):
 
     rejected += to_add
 
-    cols = ['W1-W2_obs','W2-W3_obs','logSFR','low_logSFR','high_logSFR','K_QUALITY','W1-W2_kcor','W2-W3_kcor','logSM','BT','T_USED','T_QUALITY','logMBH','low_logMBH','high_logMBH','MBHWISEUPLIM','MBHWISEQUALITY','QF']
+    cols = ['W1-W2_obs','W2-W3_obs','logSFR','low_logSFR','high_logSFR','SFR_Alert','K_QUALITY','W1-W2_kcor','W2-W3_kcor','logSM','BT','AGN_FRACTION','T_USED','T_QUALITY','logMBH','low_logMBH','high_logMBH', 'logMBH_AGN_Cleaned', 'low_logMBH_AGN_Cleaned', 'high_logMBH_AGN_Cleaned' ,'MBHWISEUPLIM','MBHWISEQUALITY','QF']
 
-    if not np.isin('K_QUALITY',input_sample.colnames):
-        for col in cols:
-            input_sample[col] = (np.ones(len(input_sample))*no_data).astype(allwise[col].dtype)
+    for col in cols:
+        input_sample[col] = (np.ones(len(input_sample))*no_data).astype(allwise[col].dtype)
 
     input_sample.loc[final_allwise['INTERNAL_ID']] = final_allwise
     
