@@ -23,7 +23,7 @@
         <img src="https://img.shields.io/badge/arXiv-arXiv%3A2405.18336-orange" alt="!arxiv">
     </a>
     <a href="#">
-        <img src="https://img.shields.io/badge/version-0.9-white" alt="!version">
+        <img src="https://img.shields.io/badge/version-1.0-white" alt="!version">
     </a>
 </div>
 
@@ -46,15 +46,15 @@
 ---
 ### Instalation 
 
-To install `wise2mbh-0.9` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
+To install `wise2mbh-1.0` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
 
     sudo apt install git
 
-To install `wise2mbh-0.9`, use the following command:
+To install `wise2mbh-1.0`, use the following command:
 
     pip install git+https://github.com/joacoh/wise2mbh.git
 
-Pre-requisites are a Python version `>=3.10` and have `numpy-1.23`, `scipy-1.12.0`, `astropy-5.3.4`, `pandas-2.2.1` and `astroquery-0.4.6`, and for this reason **we highly recommend using WISE2MBH in a dedicated Python environment with exact versions**.
+Pre-requisites are a Python version `>=3.10` and have `numpy-1.23`, `scipy-1.12.0`, `astropy-5.3.4`, `pandas-2.2.1` and `astroquery-0.4.6`, and for this reason **I highly recommend using WISE2MBH in a dedicated Python environment with exact versions**.
 
 ---
 ### Scripts and Tutorials
@@ -62,9 +62,9 @@ Pre-requisites are a Python version `>=3.10` and have `numpy-1.23`, `scipy-1.12.
 A solid pipeline has been developed for **internal-use only on the ETHER database** and a modified version is already available for public use.
 Right now, everybody can build a script with the provided functions and tutorials. Be aware of matrix sizes when using the MC approach.
 
-- Public pipeline: Available as **pipeline.py** on main
+- Public pipeline: Final version available as **pipeline.py** on main
 
-- Tutorials: **Notebooks on main/notebooks**
+- Tutorials: **Notebooks on main/notebooks (not updated to 1.0 yet)**
 
 - Documentation: **WIP**
 
@@ -97,18 +97,18 @@ Right now, everybody can build a script with the provided functions and tutorial
   ```
 - Updates in: **[Hernández-Yévenes et al. (in prep)]()**
 
-- WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH). It was presented at **XVII LARIM in Montevideo** as a poster that can be seen [here](https://joacoh.github.io/talks/2023-11-29-talk) and updates were presented at the **TITANs Annueal Meeting 2024 in Concepción** as a plenary talk, with slides available [here]().
+- WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH). An early-stage version and results were discussed at an internship in the **Black Hole Initiative at Harvard**, an stable version and it results were presented at **XVII LARIM in Montevideo** as a poster that can be seen [here](https://joacoh.github.io/talks/2023-11-29-talk) and updates were presented at the **TITANs Annueal Meeting 2024 in Concepción** as a plenary talk, with slides available [here]().
 
 - WISE2MBH final sample: Available in MNRAS as **supplementary material (outdated, 0.5.2)**. For up-to-date samples, please refer to the **ETHER database**.
 
-- WISE2MBH last version: **stable-0.9**
+- The last version maintained by me (1.0) is completely stable, consistent and pass all tests I prepared internally for the ETHER database. **As of May, 2025, I'll stop maintaining this package and its pipeline**. For further updates, please see the forks.
 
 ---
 
 ### Acknowledgements
 
 - I greatly appreciate the support from my collaborators: **Neil Nagar** (MSc thesis advisor), **Thomas H. Jarrett (deceased)**, **Michelle E. Cluver** and **Vicente Arratia**. 
-- Also to **Yuri Kovalev**, **Angelo Ricarte**, **Dominic Pesce** and **Priyamvada Natarajan** for useful discussions during my visit at Black Hole Initiative in Harvard and to **Yuhan Yao** for providing comparisons to put in the original paper. 
+- Also to **Yuri Kovalev**, **Angelo Ricarte**, **Dominic Pesce** and **Priyamvada Natarajan** for useful discussions during my internship in the Black Hole Initiative at Harvard and to **Yuhan Yao** for providing comparisons to put in the original paper. 
 - We, as a team, acknowledge funding from **ANID Chile via Nucleo Milenio TITANs (Project NCN19-058)**, **Fondecyt Regular (Project 1221421)** and **Basal (Project FB210003)**. T.H.J. acknowledges support from the **National Research Foundation (South Africa)**.
 - All lookup tables were produced by T.H.J and come originally from the publication: [A New Wide-field Infrared Survey Explorer Calibration of Stellar Mass](https://iopscience.iop.org/article/10.3847/1538-4357/acb68f/meta) in ApJ. The original TBL files can be found in the wise2mbh/kcorrections folder. If you just want to use that tables, please consider referencing that publication instead of WISE2MBH.
 - Logos were made by **Benjamín Ramírez**, a very good friend of mine! You can contact him on [Instagram](https://www.instagram.com/2nt3_/).

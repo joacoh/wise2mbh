@@ -85,11 +85,6 @@ for index in range(0, len(rows)-1):
     w1w2_obs = w1.astype(float)-w2.astype(float)
     w2w3_obs = w2.astype(float)-w3.astype(float)
 
-    sfr = wm.w3_to_SFR(w3,w2w3_obs,z[:,None],mc=True,n=mc_size)
-
-    allwise['logSFR'] = np.median(sfr, axis=1)          #16, 50 and 84 percentile values saved for final SFR
-    allwise['low_logSFR'], allwise['high_logSFR'] = np.percentile(sfr, [16,84], axis=1)
-
     first_reject_zone = allwise['W2-W3_obs']<=4.4
 
     w1 = w1[first_reject_zone]
@@ -104,7 +99,7 @@ for index in range(0, len(rows)-1):
 
     w1w2_kcors = np.zeros(np.shape(w1w2_obs)[0])                                                
     w2w3_kcors = np.zeros(np.shape(w2w3_obs)[0])
-    w1abs = np.zeros(np.shape(w1))
+    f1complete = np.zeros(np.shape(w1)[0])
 
     object_condition = (allwise['NED_TYPE']=='RadioS') | (allwise['NED_TYPE']=='QSO')
     color_condition_1 = (allwise['W1-W2_obs']>0.8) & (allwise['W2-W3_obs']<2.2)
@@ -113,6 +108,17 @@ for index in range(0, len(rows)-1):
     optimal_cond = (allwise['Z']<0.5) & ~object_condition & ~(color_condition_1 | color_condition_2)
     suboptimal_cond = (allwise['Z']>=0.5) & (allwise['Z']<=3) & ~object_condition & ~(color_condition_1 | color_condition_2)
     nok_cond = (allwise['Z']>3) | object_condition | color_condition_1 | color_condition_2
+
+    sfr = wm.w3_to_SFR(w3,w2w3_obs,z[:,None],mc=True,n=mc_size)
+    ids_cont = np.where(object_condition & (color_condition_1 | color_condition_2))
+    sfr_cont = wm.w3_to_SFR(w3[ids_cont],w2w3_obs[ids_cont],z[:,None][ids_cont],ulirgs=True,mc=True,n=mc_size)
+
+    sfr[ids_cont] = sfr_cont
+
+    allwise['logSFR'] = np.median(sfr, axis=1)          #16, 50 and 84 percentile values saved for final SFR
+    allwise['low_logSFR'], allwise['high_logSFR'] = np.percentile(sfr, [16,84], axis=1)
+    allwise['SFR_Alert'] = 1*(object_condition & (color_condition_1 | color_condition_2))
+    allwise['SFR_Alert'] = np.where((allwise['Z']>0.5),2,allwise['SFR_Alert'])
 
     optimal_sample = allwise[optimal_cond]
     suboptimal_sample = allwise[suboptimal_cond]                                                                            #Samples for k-correcion                
@@ -125,6 +131,11 @@ for index in range(0, len(rows)-1):
     e_table = wm.kcorr_table('E')
     l_table = wm.kcorr_table('L')
     s_table = wm.kcorr_table('S')
+
+    factor_w2 = 171.787
+    factor_w3 = 31.674
+
+    w2w3_limit = -2.5*(np.log10(factor_w3/factor_w2) + 0.1)                             #Last value is the flux limit from Mateos et al. (2012)
 
     identifier = np.random.choice(np.arange(10), size=3, replace=False)
     for idn, sample, cond in zip(identifier,[optimal_sample, suboptimal_sample, nok_sample], [optimal_cond,suboptimal_cond,nok_cond]):
@@ -141,9 +152,9 @@ for index in range(0, len(rows)-1):
                 w2w3_no_type = sample[no_type_index]['W2-W3_obs']  
                 z_no_type = sample[no_type_index]['Z']                                                    
 
-                e_w1_kcorrected = wm.w1_k_corrected(lookup_table=e_table,w1=w1[e_index],z=z[e_index])
-                l_w1_kcorrected = wm.w1_k_corrected(lookup_table=l_table,w1=w1[l_index],z=z[l_index])   #W1 k-corrected 
-                s_w1_kcorrected = wm.w1_k_corrected(lookup_table=s_table,w1=w1[s_index],z=z[s_index])
+                e_f1_kcorrected = wm.get_correction_factor(lookup_table=e_table, redshift=sample[e_index]['Z'], correction_factor='f1')
+                l_f1_kcorrected = wm.get_correction_factor(lookup_table=l_table, redshift=sample[l_index]['Z'], correction_factor='f1')   #W1 k-corrected 
+                s_f1_kcorrected = wm.get_correction_factor(lookup_table=s_table, redshift=sample[s_index]['Z'], correction_factor='f1')
 
                 e_w2w3_kcor = wm.get_correction_factor(lookup_table=e_table, redshift=sample[e_index]['Z'], correction_factor='W2-W3')
                 l_w2w3_kcor = wm.get_correction_factor(lookup_table=l_table, redshift=sample[l_index]['Z'], correction_factor='W2-W3')     #W2-W3 k-correction factor
@@ -153,12 +164,6 @@ for index in range(0, len(rows)-1):
                 l_w1w2_kcor = wm.get_correction_factor(lookup_table=l_table, redshift=sample[l_index]['Z'], correction_factor='W1-W2')     #W1-W2 k-correction factor
                 s_w1w2_kcor = wm.get_correction_factor(lookup_table=s_table, redshift=sample[s_index]['Z'], correction_factor='W1-W2')
 
-                #Both k-correction factors for no type sample, using division by observed W2-W3 color
-                factor_w2 = 171.787
-                factor_w3 = 31.674
-
-                w2w3_limit = -2.5*(np.log10(factor_w3/factor_w2) + 0.1)                             #Last value is the flux limit from Mateos et al. (2012)
-
                 no_type_w1w2_kcor = [
                     wm.get_correction_factor(lookup_table=e_table, redshift=z, correction_factor='W1-W2') if (color_x<=w2w3_limit)
                     else wm.get_correction_factor(lookup_table=s_table, redshift=z, correction_factor='W1-W2') if (color_x>w2w3_limit) else 0
@@ -166,23 +171,15 @@ for index in range(0, len(rows)-1):
                     ]
                 no_type_w2w3_kcor = [
                     wm.get_correction_factor(lookup_table=e_table, redshift=z, correction_factor='W2-W3') if (color_x<=w2w3_limit)
-                    else wm.get_correction_factor(lookup_table=s_table, redshift=z, correction_factor='W2-W3') if (color_x>w2w3_limit)  else 0
+                    else wm.get_correction_factor(lookup_table=s_table, redshift=z, correction_factor='W2-W3') if (color_x>w2w3_limit) else 0
                     for color_x,color_y,z in zip(w2w3_no_type,w1w2_no_type, z_no_type)
                     ]
 
-                no_type_w1_kcorrected = [
-                    wm.w1_k_corrected(lookup_table=e_table,w1=w1[no_type_id],z=np.array([z]))[0] if (color_x<=w2w3_limit)
-                    else wm.w1_k_corrected(lookup_table=s_table,w1=w1[no_type_id],z=np.array([z]))[0] if (color_x>w2w3_limit) else w1[no_type_index]
-                    for color_x,color_y,z,no_type_id in zip(w2w3_no_type,w1w2_no_type, z_no_type, no_type_index)
-                    ]   
-
-                e_w1abs_kcorrected = e_w1_kcorrected - wm.distance_modulus_z(sample[e_index]['Z'])[:,None]          #W1 k-correction for e_sources
-                l_w1abs_kcorrected = l_w1_kcorrected - wm.distance_modulus_z(sample[l_index]['Z'])[:,None]          #W1 k-correction for l_sources
-                s_w1abs_kcorrected = s_w1_kcorrected - wm.distance_modulus_z(sample[s_index]['Z'])[:,None]          #W1 k-correction for s_sources
-                no_type_w1abs_kcorrected = no_type_w1_kcorrected - wm.distance_modulus_z(z_no_type)[:,None]         #W1 k-correction for no_type_sources
-
-                if np.shape(no_type_w1abs_kcorrected)==(0,0):
-                    no_type_w1abs_kcorrected = no_type_w1abs_kcorrected.reshape(0,mc_size)
+                no_type_f1_kcor = [
+                    wm.get_correction_factor(lookup_table=e_table, redshift=z, correction_factor='f1') if (color_x<=w2w3_limit)
+                    else wm.get_correction_factor(lookup_table=s_table, redshift=z, correction_factor='f1') if (color_x>w2w3_limit) else 1
+                    for color_x,color_y,z in zip(w2w3_no_type,w1w2_no_type, z_no_type)
+                    ]
 
                 w1w2_kcors[np.where(cond)[0][e_index]] = e_w1w2_kcor
                 w1w2_kcors[np.where(cond)[0][l_index]] = l_w1w2_kcor                   #W1-W2 k-correctrion factors filled
@@ -194,30 +191,49 @@ for index in range(0, len(rows)-1):
                 w2w3_kcors[np.where(cond)[0][s_index]] = s_w2w3_kcor
                 w2w3_kcors[np.where(cond)[0][no_type_index]] = no_type_w2w3_kcor
 
-                w1abs[np.where(cond)[0][e_index]] = e_w1abs_kcorrected
-                w1abs[np.where(cond)[0][l_index]] = l_w1abs_kcorrected                 #W1abs k-corrected filled
-                w1abs[np.where(cond)[0][s_index]] = s_w1abs_kcorrected
-                w1abs[np.where(cond)[0][no_type_index]] = no_type_w1abs_kcorrected
+                f1complete[np.where(cond)[0][e_index]] = e_f1_kcorrected
+                f1complete[np.where(cond)[0][l_index]] = l_f1_kcorrected                 #W1abs k-corrected filled
+                f1complete[np.where(cond)[0][s_index]] = s_f1_kcorrected
+                f1complete[np.where(cond)[0][no_type_index]] = no_type_f1_kcor
                 
             else:
-                w1abs_kcorrected = w1[np.where(cond)[0]] - wm.distance_modulus_z(z[np.where(cond)[0]])[:,None]
-                w1abs[np.where(cond)[0]] = w1abs_kcorrected
-
                 w1w2_kcors[np.where(cond)[0]] = 0
-                w2w3_kcors[np.where(cond)[0]] = 0                               #For sources with z>3, no k-correction is applied
+                w2w3_kcors[np.where(cond)[0]] = 0                                   #For sources with z>3, no k-correction is applied
+                f1complete[np.where(cond)[0]] = 1
         else:
             continue
  
     w1w2_kcorrected = w1w2_obs - w1w2_kcors[:,None]                                 #Colors for complete slice are applied
     w2w3_kcorrected = w2w3_obs - w2w3_kcors[:,None]
+    
+    w1_flux = 309.540 * (10**(-w1/2.5))
+
+    w1_flux_k_corrected = w1_flux*f1complete[:,None]
+
+    w1_ab_mag = -2.5*np.log10(w1_flux_k_corrected) + 8.926
+    w1_vega_mag_k_corrected = w1_ab_mag-2.699
+
+    w1abs = w1_vega_mag_k_corrected - wm.distance_modulus_z(z)[:,None]
+
+    allwise['W1-W2_kcor_f'] = w1w2_kcors
+    allwise['W2-W3_kcor_f'] = w2w3_kcors
 
     allwise['W1-W2_kcor'] = np.median(w1w2_kcorrected, axis=1)                      #Median value is saved in data frame
     allwise['W2-W3_kcor'] = np.median(w2w3_kcorrected, axis=1)
+
     w1w2_sat_top = wm.clipping_dist(w1w2_kcorrected, 0.6)                           #W1-W2 is saturated between -0.2 and 0.6 for M/L ratios
     w1w2_sat_complete = wm.clipping_dist(w1w2_sat_top, -0.2, greater_than=False)
 
+    allwise['W1_abs'] = np.median(w1abs, axis=1)
+    allwise['W1-W2_clipped'] = np.median(w1w2_sat_complete, axis=1)
+
     log_sm = wm.wise_to_logsm(w1abs, w1w2_sat_complete)
-    log_sm_res = wm.wise_to_logsm(w1abs, w1w2_sat_complete, resolved=True)                             #log of Stellar mass is calculated and its median is saved
+
+    allwise['prior_logSM'] = np.median(log_sm, axis=1)
+
+    log_sm_res = wm.wise_to_logsm(w1abs, w1w2_sat_complete, resolved=True)          #log of Stellar mass is calculated and its median is saved
+
+    allwise['prior_logSMres'] = np.median(log_sm_res, axis=1)
 
     log_sm[np.where(((allwise['ex']==b'5') | (allwise['ex']==b'4')) & (allwise['W2-W3_kcor']<w2w3_limit))[0]] = log_sm_res[np.where(((allwise['ex']==b'5') | (allwise['ex']==b'4')) & (allwise['W2-W3_kcor']<w2w3_limit))[0]]
 
@@ -330,7 +346,7 @@ for index in range(0, len(rows)-1):
 
     rejected += to_add
 
-    cols = ['W1-W2_obs','W2-W3_obs','logSFR','low_logSFR','high_logSFR','SFR_Alert','K_QUALITY','W1-W2_kcor','W2-W3_kcor','logSM','BT','AGN_FRACTION','T_USED','T_QUALITY','logMBH','low_logMBH','high_logMBH', 'logMBH_AGN_Cleaned', 'low_logMBH_AGN_Cleaned', 'high_logMBH_AGN_Cleaned' ,'MBHWISEUPLIM','MBHWISEQUALITY','QF']
+    cols = ['W1-W2_obs','W2-W3_obs','logSFR','low_logSFR','high_logSFR','SFR_Alert','K_QUALITY','W1-W2_kcor_f','W2-W3_kcor_f','W1-W2_kcor','W2-W3_kcor','W1_abs','W1-W2_clipped','prior_logSM','prior_logSMres','logSM','BT','AGN_FRACTION','T_USED','T_QUALITY','logMBH','low_logMBH','high_logMBH', 'logMBH_AGN_Cleaned', 'low_logMBH_AGN_Cleaned', 'high_logMBH_AGN_Cleaned' ,'MBHWISEUPLIM','MBHWISEQUALITY','QF']
 
     for col in cols:
         input_sample[col] = (np.ones(len(input_sample))*no_data).astype(allwise[col].dtype)

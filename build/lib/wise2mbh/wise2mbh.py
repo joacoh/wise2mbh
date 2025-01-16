@@ -262,28 +262,6 @@ def get_correction_factor(lookup_table, redshift, correction_factor='W2-W3'):
             to_return.append(a)
         return to_return
 
-def w1_k_corrected(lookup_table,w1,z):
-    """
-    K-correction of WISE W1 magnitude
-
-    Inputs:
-    lookup_table (pandas.DataFrame): K-correction table to use 
-    w1 (numpy.ndarray): array-like object of W1 magnitudes to calculate K-correction
-    redshift (numpy.ndarray): array-like object of redshifts to calculate K-correction
-
-    Output:
-    w1_vega_mag_k_corrected (numpy.ndarray): array-like object of K-corrected W1 magnitudes
-    """ 
-    w1_flux = 309.540 * (10**(-w1/2.5))
-    k_fac_w1 = np.array(get_correction_factor(lookup_table=lookup_table, redshift=z, correction_factor='f1'))
-
-    w1_flux_k_corrected = w1_flux*k_fac_w1[:,None]
-
-    w1_ab_mag = -2.5*np.log10(w1_flux_k_corrected) + 8.926
-    w1_vega_mag_k_corrected = w1_ab_mag-2.699
-
-    return w1_vega_mag_k_corrected
-
 def w1w2_treshold_qso(w2w3):
     """
     W1-W2 limit in boxy region
