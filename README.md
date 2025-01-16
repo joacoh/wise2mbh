@@ -5,6 +5,15 @@
   </h1>
 </div>
 
+<div align="center">
+    <a href="#">
+        <img src="https://img.shields.io/badge/version-1.0-white" alt="!version">
+    </a>
+    <a href="https://ascl.net/2409.017">
+      <img src="https://img.shields.io/badge/ascl-2409.017-blue.svg?colorB=262255" alt="ascl:2409.017" />
+    </a>
+</div>
+
 <div id="header" align="center">
   <img src="logos/WISE2MBH positivo sin fondo.png" width="600"/>
 </div>
@@ -22,14 +31,11 @@
     <a href="https://doi.org/10.48550/arXiv.2405.18336">
         <img src="https://img.shields.io/badge/arXiv-arXiv%3A2405.18336-orange" alt="!arxiv">
     </a>
-    <a href="#">
-        <img src="https://img.shields.io/badge/version-1.0-white" alt="!version">
-    </a>
 </div>
 
 <div id="hi" align="center">
   <h2>
-    Updates (coming soon!)
+    Updates
   </h2>
 </div>
 
@@ -97,7 +103,7 @@ Right now, everybody can build a script with the provided functions and tutorial
   ```
 - Updates in: **[Hernández-Yévenes et al. (in prep)]()**
 
-- WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH). An early-stage version and results were discussed at an internship in the **Black Hole Initiative at Harvard**, an stable version and it results were presented at **XVII LARIM in Montevideo** as a poster that can be seen [here](https://joacoh.github.io/talks/2023-11-29-talk) and updates were presented at the **TITANs Annueal Meeting 2024 in Concepción** as a plenary talk, with slides available [here]().
+- WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH). An early-stage version and results were discussed at an internship in the **Black Hole Initiative at Harvard**, an stable version and it results were presented at **XVII LARIM in Montevideo** as a poster that can be seen [here](https://joacoh.github.io/talks/2023-11-29-talk) and updates were presented at the **TITANs Annual Meeting 2024 in Concepción** as a plenary talk, with slides available [here]().
 
 - WISE2MBH final sample: Available in MNRAS as **supplementary material (outdated, 0.5.2)**. For up-to-date samples, please refer to the **ETHER database**.
 
