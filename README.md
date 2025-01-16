@@ -5,6 +5,10 @@
   </h1>
 </div>
 
+<div id="header" align="center">
+  <img src="logos/WISE2MBH positivo sin fondo.png" width="600"/>
+</div>
+
 <div align="center">
     <a href="#">
         <img src="https://img.shields.io/badge/version-1.0-white" alt="!version">
@@ -12,10 +16,6 @@
     <a href="https://ascl.net/2409.017">
       <img src="https://img.shields.io/badge/ascl-2409.017-blue.svg?colorB=262255" alt="ascl:2409.017" />
     </a>
-</div>
-
-<div id="header" align="center">
-  <img src="logos/WISE2MBH positivo sin fondo.png" width="600"/>
 </div>
 
 <div id="hi" align="center">
