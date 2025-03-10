@@ -5,16 +5,11 @@
   </h1>
 </div>
 
-<div id="header" align="center">
-  <img src="logos/WISE2MBH positivo sin fondo.png" width="600"/>
-</div>
+[[logos/logo_oficial.png]]
 
 <div align="center">
     <a href="#">
         <img src="https://img.shields.io/badge/version-1.0-white" alt="!version">
-    </a>
-    <a href="https://ascl.net/2409.017">
-      <img src="https://img.shields.io/badge/ascl-2409.017-blue.svg?colorB=262255" alt="ascl:2409.017" />
     </a>
 </div>
 
@@ -72,7 +67,7 @@ Right now, everybody can build a script with the provided functions and tutorial
 
 - Tutorials: **Notebooks on main/notebooks (not updated to 1.0 yet)**
 
-- Documentation: **WIP**
+- Documentation: **[GitHub Wiki](https://github.com/joacoh/wise2mbh/wiki)** (WIP)
 
 ---
 
