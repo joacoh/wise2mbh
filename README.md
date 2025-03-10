@@ -16,33 +16,14 @@
 </p>
 
 ---
-### Instalation 
-
-To install `wise2mbh-1.0` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
-
-    sudo apt install git
-
-To install `wise2mbh-1.0`, use the following command:
-
-    pip install git+https://github.com/joacoh/wise2mbh.git
-
-Pre-requisites are a Python version `>=3.10` and have `numpy-1.23`, `scipy-1.12.0`, `astropy-5.3.4`, `pandas-2.2.1` and `astroquery-0.4.6`, and for this reason **I highly recommend using WISE2MBH in a dedicated Python environment with exact versions**.
-
----
-### Scripts and Tutorials
-
-A solid pipeline has been developed for **internal-use only on the ETHER database** and a modified version is already available for public use.
-Right now, everybody can build a script with the provided functions and tutorials. Be aware of matrix sizes when using the MC approach.
-
-- Public pipeline: Final version available as **pipeline.py** on main
-
-- Tutorials: **Notebooks on main/notebooks (not updated to 1.0 yet)**
-
-- Documentation: **[GitHub Wiki](https://github.com/joacoh/wise2mbh/wiki)** (WIP)
-
----
 
 ### About this project
+
+- WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH). An early-stage version and results were discussed at an internship in the **Black Hole Initiative at Harvard**, an stable version and it results were presented at **XVII LARIM in Montevideo** as a poster that can be seen [here](https://joacoh.github.io/talks/2023-11-29-talk) and updates were presented at the **TITANs Annual Meeting 2024 in Concepción** as a plenary talk, with slides available [here](https://joacoh.github.io/talks/2024-12-13-talk).
+
+- WISE2MBH final sample: Available in MNRAS as **supplementary material (outdated, 0.5.2)**. For up-to-date samples, please refer to the **ETHER database**.
+
+- The last version maintained by me (1.0) is completely stable, consistent and pass all tests I prepared internally for the ETHER database. **As of May, 2025, I'll stop maintaining this package and its pipeline**. For further updates, please see the forks.
 
 - Main Publication: **[Hernández-Yévenes et al. (2024)](https://doi.org/10.1093/mnras/stae1372)**
 
@@ -69,11 +50,31 @@ Right now, everybody can build a script with the provided functions and tutorial
   ```
 - Updates in: **[Hernández-Yévenes et al. (in prep)]()**
 
-- WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH). An early-stage version and results were discussed at an internship in the **Black Hole Initiative at Harvard**, an stable version and it results were presented at **XVII LARIM in Montevideo** as a poster that can be seen [here](https://joacoh.github.io/talks/2023-11-29-talk) and updates were presented at the **TITANs Annual Meeting 2024 in Concepción** as a plenary talk, with slides available [here]().
+---
 
-- WISE2MBH final sample: Available in MNRAS as **supplementary material (outdated, 0.5.2)**. For up-to-date samples, please refer to the **ETHER database**.
+### Instalation 
 
-- The last version maintained by me (1.0) is completely stable, consistent and pass all tests I prepared internally for the ETHER database. **As of May, 2025, I'll stop maintaining this package and its pipeline**. For further updates, please see the forks.
+To install `wise2mbh-1.0` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
+
+    sudo apt install git
+
+To install `wise2mbh-1.0`, use the following command:
+
+    pip install git+https://github.com/joacoh/wise2mbh.git
+
+Pre-requisites are a Python version `>=3.10` and have `numpy-1.23`, `scipy-1.12.0`, `astropy-5.3.4`, `pandas-2.2.1` and `astroquery-0.4.6`, and for this reason **I highly recommend using WISE2MBH in a dedicated Python environment with exact versions**.
+
+---
+### Scripts and Tutorials
+
+A solid pipeline has been developed for **internal-use only on the ETHER database** and a modified version is already available for public use.
+Right now, everybody can build a script with the provided functions and tutorials. Be aware of matrix sizes when using the MC approach.
+
+- Public pipeline: Final version available as **pipeline.py** on main
+
+- Tutorials: **Notebooks on main/notebooks (not updated to 1.0 yet)**
+
+- Documentation: **[GitHub Wiki](https://github.com/joacoh/wise2mbh/wiki)** (WIP)
 
 ---
 
