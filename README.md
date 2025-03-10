@@ -1,48 +1,19 @@
-<div id="hi" align="center">
-  <h1>
-    Welcome to the WISE2MBH repo!
-    <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="30px"/>
-  </h1>
-</div>
+<p align="center"><a href="#" target="_blank"><img src="logos/logo_oficial.png" width="500" alt="WISE2MBH Logo"></a></p>
 
-[[logos/logo_oficial.png]]
-
-<div align="center">
-    <a href="#">
-        <img src="https://img.shields.io/badge/version-1.0-white" alt="!version">
-    </a>
-</div>
+<p align="center">
+<a href="#"><img src="https://img.shields.io/badge/version-1.0-white" alt="Version"></a>
+</p>
 
 <div id="hi" align="center">
   <h2>
-    Original work
+    Original Work
   </h2>
 </div>
 
-<div align="center">
-    <a href="https://doi.org/10.1093/mnras/stae1372">
-        <img src="https://img.shields.io/badge/DOI-10.1093%2Fmnras%2Fstae1372-blue" alt="!Paper">
-    </a>
-    <a href="https://doi.org/10.48550/arXiv.2405.18336">
-        <img src="https://img.shields.io/badge/arXiv-arXiv%3A2405.18336-orange" alt="!arxiv">
-    </a>
-</div>
-
-<div id="hi" align="center">
-  <h2>
-    Updates
-  </h2>
-</div>
-
-<div align="center">
-    <a href="https://doi.org/10.1093/mnras/stae1372">
-        <img src="https://img.shields.io/badge/DOI-WIP-blue" alt="!Paper">
-    </a>
-    <a href="https://doi.org/10.48550/arXiv.2405.18336">
-        <img src="https://img.shields.io/badge/arXiv-WIP-orange" alt="!arxiv">
-    </a>
-</div>
-
+<p align="center">
+<a href="https://doi.org/10.1093/mnras/stae1372"><img src="https://img.shields.io/badge/DOI-10.1093%2Fmnras%2Fstae1372-blue" alt="!Paper"></a>
+<a href="https://doi.org/10.48550/arXiv.2405.18336"><img src="https://img.shields.io/badge/arXiv-arXiv%3A2405.18336-orange" alt="!arxiv"></a>
+</p>
 
 ---
 ### Instalation 
