@@ -1,7 +1,7 @@
 <p align="center"><a href="#" target="_blank"><img src="logos/logo_oficial.png" width="500" alt="WISE2MBH Logo"></a></p>
 
 <p align="center">
-<a href="#"><img src="https://img.shields.io/badge/version-1.0-white" alt="Version"></a>
+<a href="#"><img src="https://img.shields.io/badge/version-1.0.1-white" alt="Version"></a>
 </p>
 
 <div id="hi" align="center">
@@ -23,7 +23,7 @@
 
 - WISE2MBH final sample: Available in MNRAS as **supplementary material (outdated, 0.5.2)**. For up-to-date samples, please refer to the **ETHER database**.
 
-- The last version maintained by me (1.0) is completely stable, consistent and pass all tests I prepared internally for the ETHER database. **As of May, 2025, I'll stop maintaining this package and its pipeline**. For further updates, please see the forks.
+- The last version maintained by me (1.0.1) is completely stable, consistent and pass all tests I prepared internally for the ETHER database. **As of May, 2025, I'll stop maintaining this package and its pipeline**. For further updates, please see the forks.
 
 - Main Publication: **[Hernández-Yévenes et al. (2024)](https://doi.org/10.1093/mnras/stae1372)**
 
@@ -54,11 +54,11 @@
 
 ### Instalation 
 
-To install `wise2mbh-1.0` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
+To install `wise2mbh-1.0.1` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
 
     sudo apt install git
 
-To install `wise2mbh-1.0`, use the following command:
+To install `wise2mbh-1.0.1`, use the following command:
 
     pip install git+https://github.com/joacoh/wise2mbh.git
 
@@ -72,7 +72,7 @@ Right now, everybody can build a script with the provided functions and tutorial
 
 - Public pipeline: Final version available as **pipeline.py** on main
 
-- Tutorials: **Notebooks on main/notebooks (not updated to 1.0 yet)**
+- Tutorials: **Notebooks on main/notebooks (not updated to 1.0.1 yet)**
 
 - Documentation: **[GitHub Wiki](https://github.com/joacoh/wise2mbh/wiki)** (WIP)
 
