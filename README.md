@@ -70,9 +70,9 @@ Pre-requisites are a Python version `>=3.10` and have `numpy-1.23`, `scipy-1.12.
 A solid pipeline has been developed for **internal-use only on the ETHER database** and a modified version is already available for public use.
 Right now, everybody can build a script with the provided functions and tutorials. Be aware of matrix sizes when using the MC approach.
 
-- Public pipeline: Final version available as **pipeline.py** on main
+- Public pipeline: **[pipeline.py on main/scripts](https://github.com/joacoh/wise2mbh/tree/main/scripts)** 
 
-- Tutorials: **Notebooks on main/notebooks (not updated to 1.0.1 yet)**
+- Tutorials: **[Notebooks on main/notebooks](https://github.com/joacoh/wise2mbh/tree/main/notebooks)** (not updated to 1.0.1 yet)
 
 - Documentation: **[GitHub Wiki](https://github.com/joacoh/wise2mbh/wiki)** (WIP)
 
