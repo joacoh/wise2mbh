@@ -1,4 +1,3 @@
-#%%
 import numpy as np 
 from scipy.special import logit
 from astropy.cosmology import Planck18 as cosmo
@@ -377,4 +376,3 @@ def keep_first_and_non_capitals(strings):
         return result.strip()
     output = [criteria(s) for s in strings]
     return np.array(output)
-# %%

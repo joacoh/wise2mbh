@@ -1,4 +1,3 @@
-# %%
 from astropy.coordinates import SkyCoord
 from astropy.table import Table, vstack
 from astroquery.ipac.ned import Ned
@@ -7,7 +6,9 @@ from astroquery.xmatch import XMatch
 import numpy as np
 import time
 
-def query_ned(input_table, ra_column='RA', dec_column='DEC', radius=3, equinox='J2000.0', chunk=400):
+sleep_time = 0.2
+
+def query_ned(input_table, ra_column='RA', dec_column='DEC', radius=3, equinox='J2000.0', chunk=400, sleep_time=sleep_time):
     """
     Query NED for additional information based on RA and DEC coordinates or name and merge the results with the input table.
 
@@ -88,7 +89,7 @@ def query_ned(input_table, ra_column='RA', dec_column='DEC', radius=3, equinox='
                     temp_table[i][['Z','NED_TYPE']] = ned_results      
             
             ini_query = vstack([ini_query,temp_table])
-            time.sleep(1)
+            time.sleep(sleep_time)
         table = ini_query
 
     table.remove_column('INTERNAL_INDEX')
@@ -100,9 +101,9 @@ def query_ned(input_table, ra_column='RA', dec_column='DEC', radius=3, equinox='
 
     return table
 
-def xmatch_by_chunk(input_table, ra_column='RA', dec_column='DEC', radius=3, chunk=400, catalog='vizier:II/328/allwise'):
+def xmatch_by_chunk(input_table, ra_column='RA', dec_column='DEC', radius=3, chunk=400, sleep_time=sleep_time, catalog='vizier:II/328/allwise'):
     """
-    XMatch to AllWISE catalog in Vizier to obtain all necesary data for the algorithm based in RA and DEC coordinates.
+    XMatch to AllWISE catalog (can be changed) in Vizier to obtain all necesary data for the algorithm based in RA and DEC coordinates.
 
     Inputs:
         input_table (astropy.table.Table): Input table containing RA and DEC coordinates.
@@ -129,6 +130,6 @@ def xmatch_by_chunk(input_table, ra_column='RA', dec_column='DEC', radius=3, chu
                         max_distance=radius*u.arcsec, colRA1=ra_column,
                         colDec1=dec_column)
         ini_query = vstack([ini_query,next_query])
-        time.sleep(0.2)
+        time.sleep(sleep_time)
     
     return ini_query

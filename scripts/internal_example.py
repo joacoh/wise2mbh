@@ -1,5 +1,9 @@
 '''
-This is a modified version of the WISE2MBH Internal pipeline for the ETHER database. Only non-vulnerable processes are shown in this pipeline and this version does not work in other PCs. If you want to use a functional pipeline, please use the 'pipeline.py' file shared in the repo.
+WISE2MBH-1.0.1 Internal Pipeline
+
+This is a modified version of the WISE2MBH Internal pipeline for the ETHER database. 
+Only non-vulnerable processes are shown in this pipeline and this version does not work in other PCs. 
+If you want to use a functional pipeline, please use the 'pipeline.py' file shared in the repo.
 
 ONLY FOR TRANSPARENCY, THIS PIPELINE DOES NOT WORK.
 '''
@@ -117,9 +121,9 @@ for index in range(0,len(rows)-1):
     w2w3_kcors = np.zeros(np.shape(w2w3_obs)[0])
     f1complete = np.zeros(np.shape(w1)[0])
     
-'''
-Classifying objects between Galaxies or AGN/QSO
-'''
+    '''
+    Classifying objects between Galaxies or AGN/QSO
+    '''
 
     object_condition = (allwise['AGNTYPE']==3) | (allwise['AGNTYPE']==4) | (allwise['AGNTYPE']==6) | (allwise['AGNTYPE']==7) | (allwise['AGNTYPE']==8) | (allwise['AGNTYPE']==9) | (allwise['AGNTYPE']==10) | (allwise['AGNTYPE']==22)
     color_condition_1 = (allwise['W1-W2_obs']>0.8) & (allwise['W2-W3_obs']<2.2)
@@ -129,9 +133,9 @@ Classifying objects between Galaxies or AGN/QSO
     suboptimal_cond = (allwise['Z']>=0.5) & (allwise['Z']<=3) & ~object_condition & ~(color_condition_1 | color_condition_2)
     nok_cond = (allwise['Z']>3) | object_condition | color_condition_1 | color_condition_2
     
-'''
-Estimating SFR from obs. W3 magnitude and W2-W3 color
-'''
+    '''
+    Estimating SFR from obs. W3 magnitude and W2-W3 color
+    '''
 
     sfr = wm.w3_to_SFR(w3,w2w3_obs,z[:,None],mc=True,n=mc_size)
     ids_cont = np.where(object_condition & (color_condition_1 | color_condition_2))
@@ -148,9 +152,9 @@ Estimating SFR from obs. W3 magnitude and W2-W3 color
     suboptimal_sample = allwise[suboptimal_cond]                                                                            #Samples for k-correcion                
     nok_sample = allwise[nok_cond]
     
-'''
-Calculating K-corrections for W1, W2 and W3 magnitudes
-'''
+    '''
+    Calculating K-corrections for W1, W2 and W3 magnitudes
+    '''
                                                                                            
     allwise['K_QUALITY'] = 0
     allwise['K_QUALITY'] = np.where(suboptimal_cond, 1, allwise['K_QUALITY'])
@@ -249,9 +253,9 @@ Calculating K-corrections for W1, W2 and W3 magnitudes
     allwise['W1-W2_kcor'] = np.median(w1w2_kcorrected, axis=1)                      #Median value is saved in data frame
     allwise['W2-W3_kcor'] = np.median(w2w3_kcorrected, axis=1)
     
-'''
-Estimating total stellar mass from corrected W1 magnitude and W1-W2 color
-'''
+    '''
+    Estimating total stellar mass from corrected W1 magnitude and W1-W2 color
+    '''
 
     w1w2_sat_top = wm.clipping_dist(w1w2_kcorrected, 0.6)                           #W1-W2 is saturated between -0.2 and 0.6 for M/L ratios
     w1w2_sat_complete = wm.clipping_dist(w1w2_sat_top, -0.2, greater_than=False)
@@ -287,9 +291,9 @@ Estimating total stellar mass from corrected W1 magnitude and W1-W2 color
     allwise_estim_cond = ~(object_condition | color_condition_1 | color_condition_2)
     allwise_uplim_cond = object_condition | color_condition_1 | color_condition_2
     
-'''
-AGN compensation
-'''
+    '''
+    AGN compensation
+    '''
 
     allwise['BT'] = no_data
     allwise['BT'] = np.where(allwise_uplim_cond, 1, allwise['BT'])
@@ -303,9 +307,9 @@ AGN compensation
 
     allwise['AGN_FRACTION'] = agn_frac_ready
     
-'''
-Estimating T-type from corrected W2-W3 color
-'''
+    '''
+    Estimating T-type from corrected W2-W3 color
+    '''
 
     cond_change_t = (allwise_estim_cond) & ((allwise['T']==no_data) | (allwise['T']>8) | (allwise['T']<-5))     #Condition to change morphological value
     w2w3_to_use = w2w3_kcorrected[np.where(cond_change_t)[0]]                                                                   #w2w3 is masked once again, now for noQSO that require a new T
@@ -321,16 +325,16 @@ Estimating T-type from corrected W2-W3 color
     allwise['T_QUALITY'] = np.where(cond_change_t, 1, allwise['T_QUALITY'])
     allwise['T_QUALITY'] = np.where(allwise_uplim_cond, 2, allwise['T_QUALITY'])
 
+    '''
+    Obtaining B/T from T-type, obtaining bulge mass from B/T and total stellar mass and then MBH
+    '''
+
     bulge_frac = wm.morph_to_bulge_ratio(t_value_dist)                                               #Bulge fractions are calculated for noQSO using the T value
     allwise['BT'] = np.where(allwise_estim_cond, np.median(bulge_frac, axis=1), allwise['BT'])
 
     bf_all = wm.array_montecarlo(np.ones(len(allwise)), np.zeros(len(allwise)),n=mc_size)    #Bulge ratios are overwritten and its median is saved
     bf_all[allwise_estim_cond] = bulge_frac[allwise_estim_cond]
     
-'''
-Obtaining B/T from T-type, obtaining bulge mass from B/T and total stellar mass and then MBH
-'''
-
     log_bm = np.log10(bf_all) + log_sm                                  #Bulge mass is calculated with Stellar mass
     log_sm_agn_cleaned = np.log10(allwise['AGN_FRACTION'])[:,None] + log_bm
   
