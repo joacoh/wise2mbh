@@ -16,7 +16,6 @@
 </p>
 
 ---
-
 ### About this project
 
 - WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH). An early-stage version and results were discussed at an internship in the **Black Hole Initiative at Harvard**, an stable version and it results were presented at **XVII LARIM in Montevideo** as a poster that can be seen [here](https://joacoh.github.io/talks/2023-11-29-talk) and updates were presented at the **TITANs Annual Meeting 2024 in Concepción** as a plenary talk, with slides available [here](https://joacoh.github.io/talks/2024-12-13-talk).
@@ -51,7 +50,6 @@
 - Updates in: **[Hernández-Yévenes et al. (in prep)]()**
 
 ---
-
 ### Instalation 
 
 To install `wise2mbh-1.0.1` you will need to have `git` installed. If you don't have it, you can install it in **Linux** with the following command:
@@ -63,6 +61,15 @@ To install `wise2mbh-1.0.1`, use the following command:
     pip install git+https://github.com/joacoh/wise2mbh.git
 
 Pre-requisites are a Python version `>=3.10` and have `numpy-1.23`, `scipy-1.12.0`, `astropy-5.3.4`, `pandas-2.2.1` and `astroquery-0.4.6`, and for this reason **I highly recommend using WISE2MBH in a dedicated Python environment with exact versions**.
+
+---
+### Build your version
+
+If you want to build your own version of `wise2mbh` in your system, you will need `setuptools`, `wheel` and `codecs`. These may already be installed in your system. Once you have them, simply copy this repo and inside the main folder use the following command:
+
+    python3 setup.py bdist_wheel
+
+Once finished, your build will be inside the **build/lib/wise2mbh** folder and inside the **dist** folder as a compressed file.
 
 ---
 ### Scripts and Tutorials
@@ -77,7 +84,6 @@ Right now, everybody can build a script with the provided functions and tutorial
 - Documentation: **[GitHub Wiki](https://github.com/joacoh/wise2mbh/wiki)** (WIP)
 
 ---
-
 ### Acknowledgements
 
 - I greatly appreciate the support from my collaborators: **Neil Nagar** (MSc thesis advisor), **Thomas H. Jarrett (deceased)**, **Michelle E. Cluver** and **Vicente Arratia**. 
