@@ -4,7 +4,9 @@ WISE2MBH-1.0.1 Official Pipeline
 This is a general use pipeline for correct estimation of MBH using WISE cataloged data.
 This pipeline is intended to work with EVERY SAMPLE GENERATED FROM THE TUTORIALS so please create your input sample from the tutorials in this repository.
 
-Please make sure to un-comment the last line to save your final sample in a real path!
+Please make sure to modify the last lines to save your final sample in a real path!
+
+For in-depth explanations, please visit the GitHub Wiki! 
 '''
 # %%
 import wise2mbh as wm 
@@ -101,18 +103,6 @@ for index in range(0, len(rows)-1):
     f1complete = np.zeros(np.shape(w1)[0])
 
     '''
-    Classifying objects between Galaxies or AGN/QSO
-    '''
-
-    object_condition = (allwise['NED_TYPE']=='RadioS') | (allwise['NED_TYPE']=='QSO')
-    color_condition_1 = (allwise['W1-W2_obs']>0.8) & (allwise['W2-W3_obs']<2.2)
-    color_condition_2 = (allwise['W1-W2_obs']>wm.w1w2_treshold_qso(allwise['W2-W3_obs'])) & (allwise['W2-W3_obs']>=2.2) & (allwise['W2-W3_obs']<=4.4)
-
-    optimal_cond = (allwise['Z']<0.5) & ~object_condition & ~(color_condition_1 | color_condition_2)
-    suboptimal_cond = (allwise['Z']>=0.5) & (allwise['Z']<=3) & ~object_condition & ~(color_condition_1 | color_condition_2)
-    nok_cond = (allwise['Z']>3) | object_condition | color_condition_1 | color_condition_2
-
-    '''
     Estimating SFR from obs. W3 magnitude and W2-W3 color
     '''
 
@@ -127,12 +117,24 @@ for index in range(0, len(rows)-1):
     allwise['SFR_Alert'] = 1*(object_condition & (color_condition_1 | color_condition_2))
     allwise['SFR_Alert'] = np.where((allwise['Z']>0.5),2,allwise['SFR_Alert'])
 
+    '''
+    Classifying objects between Galaxies or AGN/QSO
+    '''
+
+    object_condition = (allwise['NED_TYPE']=='RadioS') | (allwise['NED_TYPE']=='QSO')
+    color_condition_1 = (allwise['W1-W2_obs']>0.8) & (allwise['W2-W3_obs']<2.2)
+    color_condition_2 = (allwise['W1-W2_obs']>wm.w1w2_treshold_qso(allwise['W2-W3_obs'])) & (allwise['W2-W3_obs']>=2.2) & (allwise['W2-W3_obs']<=4.4)
+
+    optimal_cond = (allwise['Z']<0.5) & ~object_condition & ~(color_condition_1 | color_condition_2)
+    suboptimal_cond = (allwise['Z']>=0.5) & (allwise['Z']<=3) & ~object_condition & ~(color_condition_1 | color_condition_2)
+    nok_cond = (allwise['Z']>3) | object_condition | color_condition_1 | color_condition_2
+
     optimal_sample = allwise[optimal_cond]
     suboptimal_sample = allwise[suboptimal_cond]                                                                            #Samples for k-correcion                
     nok_sample = allwise[nok_cond]
 
     '''
-    Calculating K-corrections for W1, W2 and W3 magnitudes
+    Calculating K-corrections for W1, W2 and W3 magnitudes/colors
     '''
                                                                                            
     allwise['K_QUALITY'] = 0
@@ -274,9 +276,6 @@ for index in range(0, len(rows)-1):
     AGN compensation
     '''
 
-    allwise['BT'] = no_data
-    allwise['BT'] = np.where(allwise_uplim_cond,1, allwise['BT'])
-
     w1w2_for_agn = allwise['W1-W2_obs']
     w1w2_for_agn[w1w2_for_agn>1.2] = 1.2
     w1w2_for_agn[w1w2_for_agn<0.5] = 0.5
@@ -324,6 +323,9 @@ for index in range(0, len(rows)-1):
     Obtaining B/T from T-type, obtaining bulge mass from B/T and total stellar mass and then MBH
     '''
 
+    allwise['BT'] = no_data
+    allwise['BT'] = np.where(allwise_uplim_cond,1, allwise['BT'])
+
     bulge_frac = wm.morph_to_bulge_ratio(t_value_dist)                                               #Bulge fractions are calculated for noQSO using the T value
     allwise['BT'] = np.where(allwise_estim_cond, np.median(bulge_frac, axis=1), allwise['BT'])
 
@@ -344,6 +346,10 @@ for index in range(0, len(rows)-1):
 
     allwise['logMBH_AGN_Cleaned'] = np.median(comp_mbh, axis=1)          #16, 50 and 84 percentile values saved for final MBH
     allwise['low_logMBH_AGN_Cleaned'], allwise['high_logMBH_AGN_Cleaned'] = np.percentile(comp_mbh_cleaned, [16,84], axis=1)
+
+    '''
+    Final steps and saving results
+    '''
     
     allwise['MBHWISEUPLIM'] = 0
     allwise['MBHWISEUPLIM'] = np.where(allwise_uplim_cond, 1, allwise['MBHWISEUPLIM'])
