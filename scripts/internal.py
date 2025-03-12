@@ -1,8 +1,9 @@
 '''
-WISE2MBH-1.0.1 Internal Pipeline
+WISE2MBH Internal Pipeline
 
-This is a modified version of the WISE2MBH Internal pipeline for the ETHER database. 
-Only non-vulnerable processes are shown in this pipeline and this version does not work in other PCs. 
+This is a modified version of the WISE2MBH internal pipeline for the ETHER database. 
+This pipeline may also be outdated compared to the public version, and it will not be updated.
+Only non-vulnerable processes are shown in this pipeline and this version does not work in other systems. 
 If you want to use a functional pipeline, please use the 'pipeline.py' file shared in the repo.
 
 ONLY FOR TRANSPARENCY, THIS PIPELINE DOES NOT WORK.
@@ -129,9 +130,13 @@ for index in range(0,len(rows)-1):
     color_condition_1 = (allwise['W1-W2_obs']>0.8) & (allwise['W2-W3_obs']<2.2)
     color_condition_2 = (allwise['W1-W2_obs']>wm.w1w2_treshold_qso(allwise['W2-W3_obs'])) & (allwise['W2-W3_obs']>=2.2) & (allwise['W2-W3_obs']<=4.4)
 
-    optimal_cond = (allwise['Z']<0.5) & ~object_condition & ~(color_condition_1 | color_condition_2)
-    suboptimal_cond = (allwise['Z']>=0.5) & (allwise['Z']<=3) & ~object_condition & ~(color_condition_1 | color_condition_2)
+    optimal_cond = (allwise['Z']<0.5) & ~(object_condition | color_condition_1 | color_condition_2)
+    suboptimal_cond = (allwise['Z']>=0.5) & (allwise['Z']<=3) & ~(object_condition | color_condition_1 | color_condition_2)
     nok_cond = (allwise['Z']>3) | object_condition | color_condition_1 | color_condition_2
+
+    optimal_sample = allwise[optimal_cond]
+    suboptimal_sample = allwise[suboptimal_cond]                                                                            #Samples for k-correcion                
+    nok_sample = allwise[nok_cond]
     
     '''
     Estimating SFR from obs. W3 magnitude and W2-W3 color
@@ -147,10 +152,6 @@ for index in range(0,len(rows)-1):
     allwise['low_logSFR'], allwise['high_logSFR'] = np.percentile(sfr, [16,84], axis=1)
     allwise['SFR_Alert'] = 1*(object_condition & (color_condition_1 | color_condition_2))
     allwise['SFR_Alert'] = np.where((allwise['Z']>0.5),2,allwise['SFR_Alert'])
-
-    optimal_sample = allwise[optimal_cond]
-    suboptimal_sample = allwise[suboptimal_cond]                                                                            #Samples for k-correcion                
-    nok_sample = allwise[nok_cond]
     
     '''
     Calculating K-corrections for W1, W2 and W3 magnitudes
