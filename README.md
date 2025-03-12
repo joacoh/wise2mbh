@@ -18,17 +18,17 @@
 ---
 ### About this project
 
-- WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH). An early-stage version and results were discussed at an internship in the **Black Hole Initiative at Harvard**, an stable version and it results were presented at **XVII LARIM in Montevideo** as a poster that can be seen [here](https://joacoh.github.io/talks/2023-11-29-talk) and updates were presented at the **TITANs Annual Meeting 2024 in Concepción** as a plenary talk, with slides available [here](https://joacoh.github.io/talks/2024-12-13-talk).
+- WISE2MBH is a simple an effective algorithm that uses infrared cataloged data from the Wide-field Infrared Survey Explorer (WISE) to estimate the mass of supermassive black holes (SMBH) and other relevant physical properties, such as star formation rate (SFR) and total stellar mass. An early-stage version and results were discussed at an internship in the **Black Hole Initiative at Harvard**, an stable version and it results were presented at **XVII LARIM in Montevideo** as a poster that can be seen [here](https://joacoh.github.io/talks/2023-11-29-talk) and updates were presented at the **TITANs Annual Meeting 2024 in Concepción** as a plenary talk, with slides available [here](https://joacoh.github.io/talks/2024-12-13-talk).
 
-- WISE2MBH final sample: Available in MNRAS as **supplementary material (outdated, 0.5.2)**. For up-to-date samples, please refer to the **ETHER database**.
+- WISE2MBH final sample: Available in MNRAS as **supplementary material (DO NOT USE IT, outdated, 0.5.2)**. For up-to-date samples, please refer to the **ETHER database** or do your own run in your system following **[this instructions](https://github.com/joacoh/wise2mbh/wiki/How-To-Use)**.
 
-- The last version maintained by me (1.0.1) is completely stable, consistent and pass all tests I prepared internally for the ETHER database. **As of May, 2025, I'll stop maintaining this package and its pipeline**. For further updates, please see the forks.
+- The last version maintained by me (1.0.1) is completely stable, consistent and pass all tests I prepared internally for the ETHER database. **As of May, 2025, I'll stop maintaining this package and its pipeline**. For further updates, please look for any available fork.
 
 - Main Publication: **[Hernández-Yévenes et al. (2024)](https://doi.org/10.1093/mnras/stae1372)**
 
   If the results, discussion, and/or code are useful for your research, **please consider referencing us**:
 
-  ```
+  ```bibtex
   @ARTICLE{2024MNRAS.531.4503H,
         author = {{Hern{\'a}ndez-Y{\'e}venes}, J. and {Nagar}, N. and {Arratia}, V. and {Jarrett}, T.~H.},
           title = "{WISE2MBH: a scaling-based algorithm for probing supermassive black hole masses through WISE catalogues}",
@@ -75,11 +75,13 @@ Once finished, your build will be inside the **build/lib/wise2mbh** folder and i
 ### Scripts and Tutorials
 
 A solid pipeline has been developed for **internal-use only on the ETHER database** and a modified version is already available for public use.
-Right now, everybody can build a script with the provided functions and tutorials. Be aware of matrix sizes when using the MC approach.
+Right now, everybody can build a script with the provided functions and tutorials.
 
 - Public pipeline: **[pipeline.py on main/scripts](https://github.com/joacoh/wise2mbh/tree/main/scripts)** 
 
-- Tutorials: **[Notebooks on main/notebooks](https://github.com/joacoh/wise2mbh/tree/main/notebooks)** (not updated to 1.0.1 yet)
+- Sample creator: **[query.py on main/scripts](https://github.com/joacoh/wise2mbh/tree/main/scripts)** 
+
+- Tutorials: **[Notebooks on main/notebooks](https://github.com/joacoh/wise2mbh/tree/main/notebooks)**
 
 - Documentation: **[GitHub Wiki](https://github.com/joacoh/wise2mbh/wiki)** (WIP)
 
