@@ -8,7 +8,7 @@ Please make sure to modify the last lines to save your final sample in a real pa
 
 For in-depth explanations, please visit the GitHub Wiki! 
 '''
-# %%
+
 import wise2mbh as wm 
 import numpy as np
 from astropy.table import Table
@@ -56,7 +56,6 @@ for err in ['e_W1mag','e_W2mag','e_W3mag']:
     except:
         print('Every {} band entry have 1-sigma error in the {} column.'.format(err[2:4], err))
     
-
 input_sample.add_index('INTERNAL_ID')
 
 rows = np.arange(0,len(input_sample)+chunk,chunk)
@@ -103,21 +102,6 @@ for index in range(0, len(rows)-1):
     f1complete = np.zeros(np.shape(w1)[0])
 
     '''
-    Estimating SFR from obs. W3 magnitude and W2-W3 color
-    '''
-
-    sfr = wm.w3_to_SFR(w3,w2w3_obs,z[:,None],mc=True,n=mc_size)
-    ids_cont = np.where(object_condition & (color_condition_1 | color_condition_2))
-    sfr_cont = wm.w3_to_SFR(w3[ids_cont],w2w3_obs[ids_cont],z[:,None][ids_cont],ulirgs=True,mc=True,n=mc_size)
-
-    sfr[ids_cont] = sfr_cont
-
-    allwise['logSFR'] = np.median(sfr, axis=1)          #16, 50 and 84 percentile values saved for final SFR
-    allwise['low_logSFR'], allwise['high_logSFR'] = np.percentile(sfr, [16,84], axis=1)
-    allwise['SFR_Alert'] = 1*(object_condition & (color_condition_1 | color_condition_2))
-    allwise['SFR_Alert'] = np.where((allwise['Z']>0.5),2,allwise['SFR_Alert'])
-
-    '''
     Classifying objects between Galaxies or AGN/QSO
     '''
 
@@ -125,13 +109,31 @@ for index in range(0, len(rows)-1):
     color_condition_1 = (allwise['W1-W2_obs']>0.8) & (allwise['W2-W3_obs']<2.2)
     color_condition_2 = (allwise['W1-W2_obs']>wm.w1w2_treshold_qso(allwise['W2-W3_obs'])) & (allwise['W2-W3_obs']>=2.2) & (allwise['W2-W3_obs']<=4.4)
 
-    optimal_cond = (allwise['Z']<0.5) & ~object_condition & ~(color_condition_1 | color_condition_2)
-    suboptimal_cond = (allwise['Z']>=0.5) & (allwise['Z']<=3) & ~object_condition & ~(color_condition_1 | color_condition_2)
+    optimal_cond = (allwise['Z']<0.5) & ~(object_condition | color_condition_1 | color_condition_2)
+    suboptimal_cond = (allwise['Z']>=0.5) & (allwise['Z']<=3) & ~(object_condition | color_condition_1 | color_condition_2)
     nok_cond = (allwise['Z']>3) | object_condition | color_condition_1 | color_condition_2
 
     optimal_sample = allwise[optimal_cond]
     suboptimal_sample = allwise[suboptimal_cond]                                                                            #Samples for k-correcion                
     nok_sample = allwise[nok_cond]
+
+    '''
+    Estimating SFR from obs. W3 magnitude and W2-W3 color
+    '''
+
+    sfr = wm.w3_to_SFR(w3,w2w3_obs,z[:,None],mc=True,n=mc_size)
+
+    try:
+        ids_cont = np.where(object_condition | color_condition_1 | color_condition_2)
+        sfr_cont = wm.w3_to_SFR(w3[ids_cont],w2w3_obs[ids_cont],z[:,None][ids_cont],ulirgs=True,mc=True,n=mc_size)
+        sfr[ids_cont] = sfr_cont
+    except:
+        print('No contaminated sources found.')
+
+    allwise['logSFR'] = np.median(sfr, axis=1)          #16, 50 and 84 percentile values saved for final SFR
+    allwise['low_logSFR'], allwise['high_logSFR'] = np.percentile(sfr, [16,84], axis=1)
+    allwise['SFR_Alert'] = 1*(object_condition & (color_condition_1 | color_condition_2))
+    allwise['SFR_Alert'] = np.where((allwise['Z']>0.5),2,allwise['SFR_Alert'])
 
     '''
     Calculating K-corrections for W1, W2 and W3 magnitudes/colors
@@ -379,7 +381,7 @@ for index in range(0, len(rows)-1):
 
     rejected += to_add
 
-    cols = ['W1-W2_obs','W2-W3_obs','logSFR','low_logSFR','high_logSFR','SFR_Alert','K_QUALITY','W1-W2_kcor_f','W2-W3_kcor_f','W1-W2_kcor','W2-W3_kcor','W1_abs','W1-W2_clipped','prior_logSM','prior_logSMres','logSM','BT','AGN_FRACTION','T_USED','T_QUALITY','logMBH','low_logMBH','high_logMBH', 'logMBH_AGN_Cleaned', 'low_logMBH_AGN_Cleaned', 'high_logMBH_AGN_Cleaned' ,'MBHWISEUPLIM','MBHWISEQUALITY','QF']
+    cols = ['W1-W2_obs','W2-W3_obs','logSFR','low_logSFR','high_logSFR','SFR_Alert','K_QUALITY','W1-W2_kcor_f','W2-W3_kcor_f','W1-W2_kcor','W2-W3_kcor','W1_abs','W1-W2_clipped','prior_logSM','prior_logSMres','logSM','BT','AGN_FRACTION','T_USED','T_QUALITY','logMBH','low_logMBH','high_logMBH', 'logMBH_AGN_Cleaned', 'low_logMBH_AGN_Cleaned', 'high_logMBH_AGN_Cleaned' ,'MBHWISEUPLIM','QF']
 
     for col in cols:
         input_sample[col] = (np.ones(len(input_sample))*no_data).astype(allwise[col].dtype)
@@ -400,9 +402,7 @@ input_sample  = input_sample[(input_sample['logMBH']!=no_data) & (input_sample['
 print('Succesfully finished!')
 print('Total rejected sources: {}'.format(rejected))
 
-if save_csv:
-    input_sample.write(directory[:-5]+'-w2m.csv')
-else:
-    input_sample.write(directory[:-5]+'-w2m.fits')
-# %%
-
+# if save_csv:
+#     input_sample.write(directory[:-5]+'-w2m.csv')
+# else:
+#     input_sample.write(directory[:-5]+'-w2m.fits')
