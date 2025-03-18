@@ -143,14 +143,14 @@ for index in range(0,len(rows)-1):
     '''
 
     sfr = wm.w3_to_SFR(w3,w2w3_obs,z[:,None],mc=True,n=mc_size)
-    ids_cont = np.where(object_condition & (color_condition_1 | color_condition_2))
+    ids_cont = np.where(object_condition | color_condition_1 | color_condition_2)
     sfr_cont = wm.w3_to_SFR(w3[ids_cont],w2w3_obs[ids_cont],z[:,None][ids_cont],ulirgs=True,mc=True,n=mc_size)
 
     sfr[ids_cont] = sfr_cont
 
     allwise['logSFR'] = np.median(sfr, axis=1)          #16, 50 and 84 percentile values saved for final SFR
     allwise['low_logSFR'], allwise['high_logSFR'] = np.percentile(sfr, [16,84], axis=1)
-    allwise['SFR_Alert'] = 1*(object_condition & (color_condition_1 | color_condition_2))
+    allwise['SFR_Alert'] = 1*(object_condition | color_condition_1 | color_condition_2)
     allwise['SFR_Alert'] = np.where((allwise['Z']>0.5),2,allwise['SFR_Alert'])
     
     '''
