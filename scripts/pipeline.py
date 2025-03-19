@@ -12,7 +12,6 @@ For in-depth explanations, please visit the GitHub Wiki!
 import wise2mbh as wm 
 import numpy as np
 from astropy.table import Table
-import gc
 import time
 
 no_data = 9876543.0
@@ -33,12 +32,12 @@ input_sample = Table.read(directory)
 size_before_depure = len(input_sample)
 print(f'Size before depure: {size_before_depure}')
 
-allowed_z = input_sample[input_sample['Z']!=0]                                                  #Masking of null redshifts
-qph_list = input_sample['qph'].tolist()                                                         #Extract quality flags
-null_phot = ['X', 'Z']                                                                          #Null and uplim values in W bands
-not_null_quality = [not any(letter in qph[:-1] for letter in null_phot) for qph in qph_list]    #Test quality flags
+mask_z = input_sample['Z']!=0  # Masking null redshifts
 
-input_sample = allowed_z[not_null_quality].copy()                                               #Keep non-null values in quality
+qph_array = np.array(input_sample['qph'].astype(str))  # Convert column to NumPy array of strings
+not_null_quality = np.array([not any(letter in qph[:-1] for letter in ['X', 'Z']) for qph in qph_array])
+
+input_sample = input_sample[mask_z & not_null_quality].copy()
 
 size_after_depure = len(input_sample)
 rejected = size_before_depure - size_after_depure
@@ -50,8 +49,7 @@ input_sample['T'] = no_data
 
 for err in ['e_W1mag','e_W2mag','e_W3mag']:
     try:
-        fill_err_zero = input_sample[err].data.filled(0)
-        input_sample[err] = fill_err_zero
+        input_sample[err] = input_sample[err].filled(0).astype(np.float32, copy=False)
         print('{} band present null entries in {} column. Filled with zeros'.format(err[2:4], err))
     except:
         print('Every {} band entry have 1-sigma error in the {} column.'.format(err[2:4], err))
@@ -71,7 +69,7 @@ for index in range(0, len(rows)-1):
     else:
         print('Iteration from row {} to {} out of {} rows ({}%)'.format(rows[index], rows[index+1], rows[-1], np.around(((rows[index]+rows[index+1])/2)/rows[-1]*100, decimals=2)))
     
-    allwise = input_sample.iloc['INTERNAL_ID',rows[index]:rows[index+1]]                    #Take slice of indexes
+    allwise = input_sample.loc[rows[index]:rows[index+1]-1]  # Selects rows directly by index
     size_sub_sample = len(allwise)
 
     allwise['W1-W2_obs'] = allwise['W1mag'] - allwise['W2mag']
@@ -108,9 +106,10 @@ for index in range(0, len(rows)-1):
     object_condition = (allwise['NED_TYPE']=='RadioS') | (allwise['NED_TYPE']=='QSO')
     color_condition_1 = (allwise['W1-W2_obs']>0.8) & (allwise['W2-W3_obs']<2.2)
     color_condition_2 = (allwise['W1-W2_obs']>wm.w1w2_treshold_qso(allwise['W2-W3_obs'])) & (allwise['W2-W3_obs']>=2.2) & (allwise['W2-W3_obs']<=4.4)
+    cont_cond = (object_condition | color_condition_1 | color_condition_2)
 
-    optimal_cond = (allwise['Z']<0.5) & ~(object_condition | color_condition_1 | color_condition_2)
-    suboptimal_cond = (allwise['Z']>=0.5) & (allwise['Z']<=3) & ~(object_condition | color_condition_1 | color_condition_2)
+    optimal_cond = (allwise['Z']<0.5) & ~cont_cond
+    suboptimal_cond = (allwise['Z']>=0.5) & (allwise['Z']<=3) & ~cont_cond
     nok_cond = (allwise['Z']>3) | object_condition | color_condition_1 | color_condition_2
 
     optimal_sample = allwise[optimal_cond]
@@ -124,7 +123,7 @@ for index in range(0, len(rows)-1):
     sfr = wm.w3_to_SFR(w3,w2w3_obs,z[:,None],mc=True,n=mc_size)
 
     try:
-        ids_cont = np.where(object_condition | color_condition_1 | color_condition_2)
+        ids_cont = np.where(cont_cond)
         sfr_cont = wm.w3_to_SFR(w3[ids_cont],w2w3_obs[ids_cont],z[:,None][ids_cont],ulirgs=True,mc=True,n=mc_size)
         sfr[ids_cont] = sfr_cont
     except:
@@ -132,7 +131,7 @@ for index in range(0, len(rows)-1):
 
     allwise['logSFR'] = np.median(sfr, axis=1)          #16, 50 and 84 percentile values saved for final SFR
     allwise['low_logSFR'], allwise['high_logSFR'] = np.percentile(sfr, [16,84], axis=1)
-    allwise['SFR_Alert'] = 1*(object_condition & (color_condition_1 | color_condition_2))
+    allwise['SFR_Alert'] = 1*cont_cond
     allwise['SFR_Alert'] = np.where((allwise['Z']>0.5),2,allwise['SFR_Alert'])
 
     '''
@@ -271,8 +270,8 @@ for index in range(0, len(rows)-1):
     color_condition_1 = (allwise['W1-W2_kcor']>0.8) & (allwise['W2-W3_kcor']<2.2)
     color_condition_2 = (allwise['W1-W2_kcor']>wm.w1w2_treshold_qso(allwise['W2-W3_kcor'])) & (allwise['W2-W3_kcor']>=2.2) & (allwise['W2-W3_kcor']<=4.4)
     
-    allwise_estim_cond = ~(object_condition | color_condition_1 | color_condition_2)
-    allwise_uplim_cond = object_condition | color_condition_1 | color_condition_2
+    allwise_estim_cond = ~cont_cond
+    allwise_uplim_cond = cont_cond
 
     '''
     AGN compensation
@@ -304,22 +303,6 @@ for index in range(0, len(rows)-1):
     allwise['T_QUALITY'] = 0
     allwise['T_QUALITY'] = np.where(cond_change_t, 1, allwise['T_QUALITY'])
     allwise['T_QUALITY'] = np.where(allwise_uplim_cond, 2, allwise['T_QUALITY'])
-
-    var_names = [
-        'w1', 'w2', 'w3', 'w1abs', 'w1w2', 'w2w3',
-        'e_sources', 'l_sources', 's_sources', 'no_type_sources',
-        'w1w2_kcorrected', 'w1w2_kcors', 'w1w2_no_type', 'w1w2_sat_complete', 'w1w2_sat_top',
-        'w2w3_kcorrected', 'w2w3_kcors', 'w2w3_no_type', 'w2w3_to_use'
-    ]
-    
-    for var_name in var_names:
-        try:
-            del globals()[var_name]  # Try to delete the variable
-            if verbose:
-                print(f"Deleted {var_name}")
-        except KeyError:
-            if verbose:
-                print(f"{var_name} doesn't exist, skipping")
 
     '''
     Obtaining B/T from T-type, obtaining bulge mass from B/T and total stellar mass and then MBH
@@ -353,11 +336,8 @@ for index in range(0, len(rows)-1):
     Final steps and saving results
     '''
     
-    allwise['MBHWISEUPLIM'] = 0
-    allwise['MBHWISEUPLIM'] = np.where(allwise_uplim_cond, 1, allwise['MBHWISEUPLIM'])
+    allwise['MBHWISEUPLIM'] = np.where(allwise_uplim_cond, 1, 0)
 
-    allwise['MBHWISEUPLIM'] = 0
-    allwise['MBHWISEUPLIM'] = np.where(allwise_uplim_cond, 1, allwise['MBHWISEUPLIM'])
     phot_info = [x[:-1] for x in allwise['qph']]
     ex_info = allwise['ex']                             #Photometric quality, extention flag and uplim are combined in one string
     mbh_info = allwise['MBHWISEUPLIM'].astype(str)
@@ -387,17 +367,14 @@ for index in range(0, len(rows)-1):
         input_sample[col] = (np.ones(len(input_sample))*no_data).astype(allwise[col].dtype)
 
     input_sample.loc[final_allwise['INTERNAL_ID']] = final_allwise
-    
-    del allwise, bf_all, bulge_frac, log_bm, log_mbh, log_sm, comp_mbh, new_t_value, t_value_dist
-    gc.collect()
-    
+        
     if index==0:
         end_time = time.time()
         elapsed_time = end_time - start_time
         print('Estimated total time: {} minutes'.format(np.around((elapsed_time*len(rows)/60)+3.5, decimals=1)))
         print('Iteration from row {} to {} out of {} rows ({}%)'.format(rows[index], rows[index+1], rows[-1], np.around(((rows[index]+rows[index+1])/2)/rows[-1]*100, decimals=2)))
 
-input_sample  = input_sample[(input_sample['logMBH']!=no_data) & (input_sample['logMBH']>=5)]
+input_sample = input_sample[(input_sample['logMBH']!=no_data) & (input_sample['logMBH']>=5)]
 
 print('Succesfully finished!')
 print('Total rejected sources: {}'.format(rejected))
