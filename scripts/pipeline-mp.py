@@ -13,6 +13,7 @@ verbose = False
 chunk = 400
 mc_size = int(1e3)
 save_csv = False
+n_cores = mp.cpu_count() - 1  # Use all available cores except 1 for stability
 directory = '../samples/AllWISE_sample.fits'
 
 print('Running IN PARALLEL with an MC size of {}, if this is not correct, please abort.'.format(mc_size))
@@ -367,8 +368,12 @@ def run_parallel_pipeline(input_sample, mc_size, no_data, n_cores=4):
 if __name__ == "__main__":
     counter = np.arange(0, len(input_sample) + chunk, chunk).tolist()
     original_len = len(counter)
-    n_cores = mp.cpu_count() - 1  # Use all available cores except 1 for stability
+
+    print('Using {} of {} cores. Cancel the process now if this is not safe...'.format(n_cores,mp.cpu_count()))
+    time.sleep(5)
+
     final_mp = run_parallel_pipeline(input_sample, mc_size, no_data, n_cores)
+
     print('Successfully finished with multiprocessing!')
 
 input_sample = final_mp[final_mp['logMBH']>=5]
