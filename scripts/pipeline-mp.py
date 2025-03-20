@@ -317,11 +317,13 @@ def main_process(index, start, end, input_sample, mc_size, no_data, rows):
     comp_mbh = wm.comp_mbh(log_mbh)                                      #Empiriclly ompensated MBH
     comp_mbh_cleaned = wm.comp_mbh(log_mbh_cleaned)
 
-    allwise['logMBH'] = np.median(comp_mbh, axis=1)          #16, 50 and 84 percentile values saved for final MBH
-    allwise['low_logMBH'], allwise['high_logMBH'] = np.percentile(comp_mbh_cleaned, [16,84], axis=1)
+    comp_mbh_cleaned = np.ma.filled(comp_mbh_cleaned, np.nan)
 
-    allwise['logMBH_AGN_Cleaned'] = np.median(comp_mbh, axis=1)          #16, 50 and 84 percentile values saved for final MBH
-    allwise['low_logMBH_AGN_Cleaned'], allwise['high_logMBH_AGN_Cleaned'] = np.percentile(comp_mbh_cleaned, [16,84], axis=1)
+    allwise['logMBH'] = np.median(comp_mbh, axis=1)          #16, 50 and 84 percentile values saved for final MBH
+    allwise['low_logMBH'], allwise['high_logMBH'] = np.percentile(comp_mbh, [16,84], axis=1)
+
+    allwise['logMBH_AGN_Cleaned'] = np.nanmedian(comp_mbh_cleaned, axis=1)          #16, 50 and 84 percentile values saved for final MBH
+    allwise['low_logMBH_AGN_Cleaned'], allwise['high_logMBH_AGN_Cleaned'] = np.nanpercentile(comp_mbh_cleaned, [16,84], axis=1)
 
     '''
     Final steps and saving results
