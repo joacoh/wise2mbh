@@ -74,16 +74,19 @@ Once finished, your build will be inside the **build/lib/wise2mbh** folder and i
 ---
 ### Scripts and Tutorials
 
-A solid pipeline has been developed for **internal-use only on the ETHER database** and a modified version is already available for public use.
+A solid pipeline has been developed for **internal-use only on the ETHER database** and a modified version is already available for public use. 
+A parallel version of the pipeline is in development, and due to the sstochasticity of the monte-carlo implementation, small differences can be found between runs of the same/different pipeline versions.
 Right now, everybody can build a script with the provided functions and tutorials.
 
 - Public pipeline: **[pipeline.py on main/scripts](https://github.com/joacoh/wise2mbh/tree/main/scripts)** 
+
+- Public parallel pipeline (WIP): **[pipeline-mp.py on main/scripts](https://github.com/joacoh/wise2mbh/tree/main/scripts)** 
 
 - Sample creator: **[query.py on main/scripts](https://github.com/joacoh/wise2mbh/tree/main/scripts)** 
 
 - Tutorials: **[Notebooks on main/notebooks](https://github.com/joacoh/wise2mbh/tree/main/notebooks)**
 
-- Documentation: **[GitHub Wiki](https://github.com/joacoh/wise2mbh/wiki)** (WIP)
+- Documentation (WIP): **[GitHub Wiki](https://github.com/joacoh/wise2mbh/wiki)**
 
 ---
 ### Acknowledgements
