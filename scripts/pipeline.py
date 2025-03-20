@@ -8,7 +8,7 @@ Please make sure to modify the last lines to save your final sample in a real pa
 
 For in-depth explanations, please visit the GitHub Wiki! 
 '''
-
+#%%
 import wise2mbh as wm 
 import numpy as np
 from astropy.table import Table
@@ -19,7 +19,7 @@ verbose = False
 chunk = 400
 mc_size = int(1e3)
 save_csv = False
-directory = 'samples/AllWISE_sample.fits'
+directory = '../samples/AllWISE_sample.fits'
 
 print('Running with an MC size of {}, if this is not correct, please abort.'.format(mc_size))
 
@@ -358,15 +358,11 @@ for index in range(0, len(rows)-1):
 
     final_allwise = allwise[mbh_non_outliers & non_reject_sources]
 
-    size_after_algorithm = len(allwise)
-    to_add = size_sub_sample - size_after_algorithm
+    if index==0:
+        cols = ['W1-W2_obs','W2-W3_obs','logSFR','low_logSFR','high_logSFR','SFR_Alert','K_QUALITY','W1-W2_kcor_f','W2-W3_kcor_f','W1-W2_kcor','W2-W3_kcor','W1_abs','W1-W2_clipped','prior_logSM','prior_logSMres','logSM','BT','AGN_FRACTION','T_USED','T_QUALITY','logMBH','low_logMBH','high_logMBH', 'logMBH_AGN_Cleaned', 'low_logMBH_AGN_Cleaned', 'high_logMBH_AGN_Cleaned' ,'MBHWISEUPLIM','QF']
 
-    rejected += to_add
-
-    cols = ['W1-W2_obs','W2-W3_obs','logSFR','low_logSFR','high_logSFR','SFR_Alert','K_QUALITY','W1-W2_kcor_f','W2-W3_kcor_f','W1-W2_kcor','W2-W3_kcor','W1_abs','W1-W2_clipped','prior_logSM','prior_logSMres','logSM','BT','AGN_FRACTION','T_USED','T_QUALITY','logMBH','low_logMBH','high_logMBH', 'logMBH_AGN_Cleaned', 'low_logMBH_AGN_Cleaned', 'high_logMBH_AGN_Cleaned' ,'MBHWISEUPLIM','QF']
-
-    for col in cols:
-        input_sample[col] = (np.ones(len(input_sample))*no_data).astype(allwise[col].dtype)
+        for col in cols:
+            input_sample[col] = (np.ones(len(input_sample))*no_data).astype(allwise[col].dtype)
 
     input_sample.loc[final_allwise['INTERNAL_ID']] = final_allwise
         
@@ -379,9 +375,13 @@ for index in range(0, len(rows)-1):
 input_sample = input_sample[(input_sample['logMBH']!=no_data) & (input_sample['logMBH']>=5)]
 
 print('Succesfully finished!')
+
+rejected = size_before_depure - len(input_sample)
+
 print('Total rejected sources: {}'.format(rejected))
 
 # if save_csv:
 #     input_sample.write(directory[:-5]+'-w2m.csv')
 # else:
 #     input_sample.write(directory[:-5]+'-w2m.fits')
+#%%
