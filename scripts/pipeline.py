@@ -30,7 +30,7 @@ Importing and Depuring initial sample
 input_sample = Table.read(directory)
 
 size_before_depure = len(input_sample)
-print(f'Size before depure: {size_before_depure}')
+print('Size before depure: {}'.format(size_before_depure))
 
 mask_z = input_sample['Z']!=0  # Masking null redshifts
 
@@ -41,7 +41,7 @@ input_sample = input_sample[mask_z & not_null_quality].copy()
 
 size_after_depure = len(input_sample)
 rejected = size_before_depure - size_after_depure
-print(f'Size after depure: {size_after_depure}')
+print('Size after depure: {}'.format(size_after_depure))
 
 input_sample['INTERNAL_ID'] = np.arange(0,len(input_sample))
 input_sample['NED_TYPE'] = 'Unknown'

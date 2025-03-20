@@ -25,7 +25,7 @@ Importing and Depuring initial sample
 input_sample = Table.read(directory)
 
 size_before_depure = len(input_sample)
-print(f'Size before depure: {size_before_depure}')
+print('Size before depure: {}'.format(size_before_depure))
 
 mask_z = input_sample['Z']!=0
 
@@ -36,7 +36,7 @@ input_sample = input_sample[mask_z & not_null_quality].copy()
 
 size_after_depure = len(input_sample)
 
-print(f'Size after depure: {size_after_depure}')
+print('Size after depure: {}'.format(size_after_depure))
 
 input_sample['INTERNAL_ID'] = np.arange(0,len(input_sample))
 input_sample['NED_TYPE'] = 'Unknown'
@@ -351,7 +351,7 @@ def main_process(index, start, end, input_sample, mc_size, no_data, rows):
     del counter[0:n_cores]
 
     # the percentage is not completely accuarate, but the index and rows are precise. Useful for debugging.
-    print(f"Completed chunk {index} from rows {start} to {end} (of {rows[-1]} rows). {np.around(percent,decimals=2)}%")
+    print('Completed chunk {} from rows {} to {} (of {} rows). {}%'.format(index,start,end,rows[-1],np.around(percent,decimals=2)))
 
     return final_allwise
             
@@ -371,10 +371,12 @@ if __name__ == "__main__":
 
     print('Using {} of {} cores. Cancel the process now if this is not safe...'.format(n_cores,mp.cpu_count()))
     time.sleep(5)
+    start_time = time.time()
 
     final_mp = run_parallel_pipeline(input_sample, mc_size, no_data, n_cores)
 
-    print('Successfully finished with multiprocessing!')
+    finish_time = np.around((time.time() - start_time)/60, decimals=2)
+    print('Successfully finished with multiprocessing! ({} minutes)'.format(finish_time))
 
 input_sample = final_mp[final_mp['logMBH']>=5]
 
