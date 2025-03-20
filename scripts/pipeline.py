@@ -269,7 +269,9 @@ for index in range(0, len(rows)-1):
     object_condition = (allwise['NED_TYPE']==b'RadioS') | (allwise['NED_TYPE']==b'QSO')
     color_condition_1 = (allwise['W1-W2_kcor']>0.8) & (allwise['W2-W3_kcor']<2.2)
     color_condition_2 = (allwise['W1-W2_kcor']>wm.w1w2_treshold_qso(allwise['W2-W3_kcor'])) & (allwise['W2-W3_kcor']>=2.2) & (allwise['W2-W3_kcor']<=4.4)
-    
+
+    cont_cond = (object_condition | color_condition_1 | color_condition_2)
+
     allwise_estim_cond = ~cont_cond
     allwise_uplim_cond = cont_cond
 
