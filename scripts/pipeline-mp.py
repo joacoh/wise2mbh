@@ -380,7 +380,7 @@ input_sample = final_mp[final_mp['logMBH']>=5]
 
 print('Done.')
 
-rejected = size_before_depure - len(final_mp)
+rejected = size_before_depure - len(input_sample)
 
 print('Total rejected sources: {}'.format(rejected))
 
