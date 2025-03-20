@@ -346,12 +346,15 @@ def main_process(index, start, end, input_sample, mc_size, no_data, rows):
 
     final_allwise = allwise[mbh_non_outliers & non_reject_sources]
 
-    print(f"Completed chunk {index} from rows {start} to {end} (of {rows[-1]} rows). {np.around((end)/rows[-1]*100, decimals=2)}% ready.")
+    percent = (1-(len(counter)/original_len))*100
+    del counter[0:n_cores]
+
+    # the percentage is not completely accuarate, but the index and rows are precise. Useful for debugging.
+    print(f"Completed chunk {index} from rows {start} to {end} (of {rows[-1]} rows). {np.around(percent,decimals=2)}%")
 
     return final_allwise
             
 def run_parallel_pipeline(input_sample, mc_size, no_data, n_cores=4):
-    """Runs the pipeline using multiprocessing"""
     rows = np.arange(0, len(input_sample) + chunk, chunk)
     tasks = [(i, rows[i], rows[i + 1], input_sample, mc_size, no_data, rows) for i in range(len(rows) - 1)]
 
@@ -362,6 +365,8 @@ def run_parallel_pipeline(input_sample, mc_size, no_data, n_cores=4):
 
 # --- Run the Pipeline ---
 if __name__ == "__main__":
+    counter = np.arange(0, len(input_sample) + chunk, chunk).tolist()
+    original_len = len(counter)
     n_cores = mp.cpu_count() - 1  # Use all available cores except 1 for stability
     final_mp = run_parallel_pipeline(input_sample, mc_size, no_data, n_cores)
     print('Successfully finished with multiprocessing!')
