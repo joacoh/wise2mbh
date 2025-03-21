@@ -9,14 +9,13 @@ from astropy.table import Table, vstack
 import time
 
 no_data = 9876543.0
-verbose = False
 chunk = 400
 mc_size = int(1e3)
 save_csv = False
 n_cores = mp.cpu_count() - 1  # Use all available cores except 1 for stability
 directory = '../samples/AllWISE_sample.fits'
 
-print('Running IN PARALLEL with an MC size of {}, if this is not correct, please abort.'.format(mc_size))
+print('Running IN PARALLEL with:\nMC size of {}\nChunk size of {}\nIf this is not correct, please abort.'.format(mc_size,chunk))
 
 '''
 Importing and Depuring initial sample
@@ -27,7 +26,7 @@ input_sample = Table.read(directory)
 size_before_depure = len(input_sample)
 print('Size before depure: {}'.format(size_before_depure))
 
-mask_z = input_sample['Z']!=0
+mask_z = input_sample['Z']>0
 
 qph_array = np.array(input_sample['qph'].astype(str))
 not_null_quality = np.array([not any(letter in qph[:-1] for letter in ['X', 'Z']) for qph in qph_array])
@@ -57,9 +56,9 @@ Main algorithm
 
 print('Running WISE2MBH for catalog in {}:'.format(directory))
 
-def main_process(index, start, end, input_sample, mc_size, no_data, rows):
+def main_process(index, start, end, mc_size, no_data, rows, counter, lock, total_tasks):
 
-    allwise = input_sample[start:end].copy()
+    allwise = input_sample[start:end]
 
     allwise['W1-W2_obs'] = allwise['W1mag'] - allwise['W2mag']
     allwise['W2-W3_obs'] = allwise['W2mag'] - allwise['W3mag']
@@ -349,33 +348,36 @@ def main_process(index, start, end, input_sample, mc_size, no_data, rows):
 
     final_allwise = allwise[mbh_non_outliers & non_reject_sources]
 
-    percent = (1-(len(counter)/original_len))*100
-    del counter[0:n_cores]
+    with lock:
+            counter.value += 1
+            progress = (counter.value / total_tasks) * 100
 
     # the percentage is not completely accuarate, but the index and rows are precise. Useful for debugging.
-    print('Completed chunk {} from rows {} to {} (of {} rows). {}%'.format(index,start,end,rows[-1],np.around(percent,decimals=2)))
+    print('Completed chunk {} from rows {} to {} (of {} rows) {:.2f}%. \n'.format(index,start,end,rows[-1], progress))
 
     return final_allwise
             
-def run_parallel_pipeline(input_sample, mc_size, no_data, n_cores=4):
+def run_parallel_pipeline(mc_size, no_data, n_cores=4):
     rows = np.arange(0, len(input_sample) + chunk, chunk)
-    tasks = [(i, rows[i], rows[i + 1], input_sample, mc_size, no_data, rows) for i in range(len(rows) - 1)]
+    tasks = [(i, rows[i], rows[i + 1], mc_size, no_data, rows) for i in range(len(rows) - 1)]
+
+    manager = mp.Manager()
+    counter = manager.Value("i", 0)  # Shared counter
+    lock = manager.Lock()  # Lock to avoid race conditions
+    total_tasks = len(tasks)  # Total number of tasks
 
     with mp.Pool(n_cores) as pool:
-        results = pool.starmap(main_process, tasks)  # Parallel execution
+        results = pool.starmap(main_process, [(i, start, end, mc_size, no_data, rows, counter, lock, total_tasks) for i, start, end, _, _, _ in tasks])  # Parallel execution
 
     return vstack(results)
 
-# --- Run the Pipeline ---
+#%% --- Run the Pipeline ---
 if __name__ == "__main__":
-    counter = np.arange(0, len(input_sample) + chunk, chunk).tolist()
-    original_len = len(counter)
-
     print('Using {} of {} cores. Cancel the process now if this is not safe...'.format(n_cores,mp.cpu_count()))
     time.sleep(5)
     start_time = time.time()
 
-    final_mp = run_parallel_pipeline(input_sample, mc_size, no_data, n_cores)
+    final_mp = run_parallel_pipeline(mc_size, no_data, n_cores)
 
     finish_time = np.around((time.time() - start_time)/60, decimals=2)
     print('Successfully finished with multiprocessing! ({} minutes)'.format(finish_time))
