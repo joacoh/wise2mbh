@@ -15,13 +15,12 @@ from astropy.table import Table
 import time
 
 no_data = 9876543.0
-verbose = False
 chunk = 400
 mc_size = int(1e3)
 save_csv = False
 directory = '../samples/AllWISE_sample.fits'
 
-print('Running with an MC size of {}, if this is not correct, please abort.'.format(mc_size))
+print('Running with:\nMC size of {}\nChunk size of {}\nIf this is not correct, please abort.'.format(mc_size,chunk))
 
 '''
 Importing and Depuring initial sample
@@ -32,7 +31,7 @@ input_sample = Table.read(directory)
 size_before_depure = len(input_sample)
 print('Size before depure: {}'.format(size_before_depure))
 
-mask_z = input_sample['Z']!=0  # Masking null redshifts
+mask_z = input_sample['Z']>0  # Masking null redshifts
 
 qph_array = np.array(input_sample['qph'].astype(str))  # Convert column to NumPy array of strings
 not_null_quality = np.array([not any(letter in qph[:-1] for letter in ['X', 'Z']) for qph in qph_array])
