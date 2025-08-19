@@ -22,7 +22,7 @@
 
 - WISE2MBH final sample: Available in MNRAS as **supplementary material (DO NOT USE IT, outdated, 0.5.2)**. For up-to-date samples, please refer to the **ETHER database** or do your own run in your system following **[this instructions](https://github.com/joacoh/wise2mbh/wiki/How-To-Use)**.
 
-- The last version maintained by me (1.0.1) is completely stable, consistent and pass all tests I prepared internally for the ETHER database. **As of May, 2025, I'll stop maintaining this package and its pipeline**. For further updates, please look for any available fork.
+- The last version maintained by me (1.0.1) is completely stable, consistent and pass all tests I prepared internally for the ETHER database. **As of May, 2025, I'll (officially) stop maintaining this package and its pipeline**. For further updates, please look for any available fork.
 
 - Main Publication: **[Hernández-Yévenes et al. (2024)](https://doi.org/10.1093/mnras/stae1372)**
 
@@ -93,6 +93,7 @@ Right now, everybody can build a script with the provided functions and tutorial
 
 - I greatly appreciate the support from my collaborators: **Neil Nagar** (MSc thesis advisor), **Thomas H. Jarrett (deceased)**, **Michelle E. Cluver** and **Vicente Arratia**. 
 - Also to **Yuri Kovalev**, **Angelo Ricarte**, **Dominic Pesce** and **Priyamvada Natarajan** for useful discussions during my internship in the Black Hole Initiative at Harvard and to **Yuhan Yao** for providing comparisons to put in the original paper. 
-- We, as a team, acknowledge funding from **ANID Chile via Nucleo Milenio TITANs (Project NCN19-058)**, **Fondecyt Regular (Project 1221421)** and **Basal (Project FB210003)**. T.H.J. acknowledges support from the **National Research Foundation (South Africa)**.
+- We, as a team, acknowledge funding from **ANID Chile via Nucleo Milenio TITANs (Project NCN19-058)**, **Fondecyt Regular (Project 1221421)** and **Basal (Project FB210003)**. T.H.J. acknowledges support from the **National Research Foundation (South Africa)**. M.E.C. acknowledges the support of an **Australian Research Council Future Fellowship (Project FT170100273) funded by the Australian Government**. 
 - All lookup tables were produced by T.H.J and come originally from the publication: [A New Wide-field Infrared Survey Explorer Calibration of Stellar Mass](https://iopscience.iop.org/article/10.3847/1538-4357/acb68f/meta) in ApJ. The original TBL files can be found in the wise2mbh/kcorrections folder. If you just want to use that tables, please consider referencing that publication instead of WISE2MBH.
+
 - Logos were made by **Benjamín Ramírez**, a very good friend of mine! You can contact him on [Instagram](https://www.instagram.com/2nt3_/).
